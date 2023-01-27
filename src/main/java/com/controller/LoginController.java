@@ -20,7 +20,7 @@ public class LoginController {
 	MemberService service;
 	
 	//로그인 화면
-	@RequestMapping(value = "/login")
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String loginForm() {
 		return "loginForm";
 	}
@@ -52,5 +52,15 @@ public class LoginController {
 		}
 		m.addFlashAttribute("mesg", mesg);
 		return nextPage;
+	}
+	
+	//로그아웃
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(HttpSession session, RedirectAttributes m) {
+		System.out.println("logout====");
+		MemberDTO login=(MemberDTO)session.getAttribute("login");
+		session.invalidate();
+		m.addFlashAttribute("mesg", login.getMember_name()+"님 로그아웃 완료 :)");
+		return "redirect:/";
 	}
 }

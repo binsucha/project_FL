@@ -20,7 +20,7 @@ public class MemberController {
 	private MemberService service;
 	
 	//회원 가입 화면
-	@RequestMapping(value = "/join")
+	@RequestMapping(value = "/join", method = RequestMethod.GET)
 	public String memberForm() {
 		return "memberForm";
 	}
