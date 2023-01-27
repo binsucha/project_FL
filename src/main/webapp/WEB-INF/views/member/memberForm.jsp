@@ -170,7 +170,7 @@
 				//console.log("검사 완료 : submit");
 			}
 		});//end submit
-	})
+	});
 	
 	//유효성 검사 메서드
 	function checkValue() {

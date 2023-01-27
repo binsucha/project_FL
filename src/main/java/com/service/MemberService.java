@@ -14,13 +14,21 @@ public class MemberService {
 	@Autowired
 	private MemberDAO dao;
 
-	//회원 가입 아이디 중복 확인
-	public MemberDTO checkId(HashMap<String, String> map) {
-		return dao.checkId(map);
+	//회원 가입 데이터 중복 확인
+	public MemberDTO checkData(HashMap<String, String> map) {
+		return dao.checkData(map);
 	}
 
 	public int joinMember(Map<String, String> map) {
 		return dao.joinMember(map);
+	}
+
+	public MemberDTO checkId(Map<String, String> map) {
+		return dao.checkId(map);
+	}
+
+	public MemberDTO login(Map<String, String> map) {
+		return dao.login(map);
 	}
 
 }

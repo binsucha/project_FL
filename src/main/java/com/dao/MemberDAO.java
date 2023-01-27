@@ -19,13 +19,21 @@ public class MemberDAO {
 		return 0;
 	}
 
-	//회원 가입 아이디 중복 확인
-	public MemberDTO checkId(HashMap<String, String> map) {
-		return session.selectOne("MemberMapper.checkId", map);
+	//회원 가입 데이터 중복 확인
+	public MemberDTO checkData(HashMap<String, String> map) {
+		return session.selectOne("MemberMapper.checkData", map);
 	}
 
 	public int joinMember(Map<String, String> map) {
 		return session.insert("MemberMapper.joinMember", map);
+	}
+
+	public MemberDTO checkId(Map<String, String> map) {
+		return session.selectOne("MemberMapper.checkId", map);
+	}
+
+	public MemberDTO login(Map<String, String> map) {
+		return session.selectOne("MemberMapper.login", map);
 	}
 
 }

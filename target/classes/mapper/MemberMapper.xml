@@ -9,7 +9,7 @@
 	</select>
 	
 	<!-- 회원 가입 데이터 중복 확인 -->
-	<select id="checkId" parameterType="hashmap" resultType="MemberDTO">
+	<select id="checkData" parameterType="hashmap" resultType="MemberDTO">
 		select * from member
 		<choose>
 			<when test="type=='id'"><!-- #{type}으로 하면 오류, key 값을 어떻게 인식하는 걸까? -->
@@ -28,8 +28,21 @@
 	</select>
 	
 	<!-- 회원 가입 -->
-	<insert id="joinMember" parameterType="map">
+	<insert id="joinMember" parameterType="hashMap">
 		insert into member (id, password, member_name, email, phone, member_role)
 		values (#{id}, #{password}, #{member_name}, #{email}, #{phone}, 1)
 	</insert>
+	
+	<!-- 회원 찾기 -->
+	<select id="checkId" parameterType="hashMap" resultType="MemberDTO">
+		select * from member
+		where id = #{id}
+	</select>
+	
+	<!-- 로그인 -->
+	<select id="login" parameterType="hashMap" resultType="MemberDTO">
+		select * from member
+		where id = #{id}
+		and password = #{password}
+	</select>
 </mapper>

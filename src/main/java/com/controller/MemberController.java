@@ -28,12 +28,12 @@ public class MemberController {
 	//회원 가입 데이터 중복 확인
 	@RequestMapping(value = "/join/data", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	public @ResponseBody String checkData(String type, String data) {
-		System.out.println("checkData====="+type+" : "+data);
+		//System.out.println("checkData====="+type+" : "+data);
 		HashMap<String, String> map=new HashMap<String, String>();
 		map.put("type", type);
 		map.put("data", data);
-		MemberDTO member=service.checkId(map);
-		System.out.println("member===="+member);
+		MemberDTO member=service.checkData(map);
+		//System.out.println("member===="+member);
 		
 		String mesg="사용 가능합니다.";//dto null
 		
@@ -46,16 +46,15 @@ public class MemberController {
 	}
 	
 	//회원 가입
-	@RequestMapping (value = "/join", method = RequestMethod.POST)
+	@RequestMapping(value = "/join", method = RequestMethod.POST)
 	public String join(@RequestParam Map<String, String> map, RedirectAttributes m) {//MemberDTO dto로 받았을 때 데이터 잘 가져오는 건 이해가 되는데,, map은 어떻게 key=value로 가져오는 걸까? 신기한데,,
-		System.out.println("회원 가입 : "+map);
-		
+		//System.out.println("회원 가입 : "+map);
 		String nextPage="";
 		int num=0;
 		
 		try {
 			num=service.joinMember(map);
-			System.out.println(num+"명 회원 가입");
+			System.out.println(num+"명 회원 가입 완료");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.getMessage();
