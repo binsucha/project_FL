@@ -1,11 +1,13 @@
 package com.dto;
 
+import org.apache.ibatis.type.Alias;
+
+@Alias("MemberDTO")
 public class MemberDTO {
 	String id;
 	String password;
 	String member_name;
-	String email1;
-	String email2;
+	String email;
 	String phone;
 	int member_role;
 	
@@ -13,13 +15,12 @@ public class MemberDTO {
 		super();
 	}
 	
-	public MemberDTO(String id, String password, String member_name, String email1, String email2, String phone) {
+	public MemberDTO(String id, String password, String member_name, String email, String phone) {
 		super();
 		this.id = id;
 		this.password = password;
 		this.member_name = member_name;
-		this.email1 = email1;
-		this.email2 = email2;
+		this.email = email;
 		this.phone = phone;
 		this.member_role = 1;
 	}
@@ -48,20 +49,12 @@ public class MemberDTO {
 		this.member_name = member_name;
 	}
 
-	public String getEmail1() {
-		return email1;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setEmail1(String email1) {
-		this.email1 = email1;
-	}
-
-	public String getEmail2() {
-		return email2;
-	}
-
-	public void setEmail2(String email2) {
-		this.email2 = email2;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPhone() {
@@ -82,8 +75,8 @@ public class MemberDTO {
 
 	@Override
 	public String toString() {
-		return "MemberDTO [id=" + id + ", password=" + password + ", member_name=" + member_name + ", email1=" + email1
-				+ ", email2=" + email2 + ", phone=" + phone + ", member_role=" + member_role + "]";
+		return "MemberDTO [id=" + id + ", password=" + password + ", member_name=" + member_name + ", email=" + email
+				+ ", phone=" + phone + ", member_role=" + member_role + "]";
 	}
 	
 }

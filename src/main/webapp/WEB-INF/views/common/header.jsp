@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"></c:set>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
@@ -13,11 +14,11 @@
           <a class="nav-link" href="#">로그인</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">회원가입</a>
+          <a class="nav-link" href="${contextPath}/join">회원가입</a>
         </li>
       </ul>
     </div>
-    <a class="navbar-brand" href="#">FOODIE League</a>
+    <a class="navbar-brand" href="${contextPath}/">FOODIE League</a>
     <div class="collapse navbar-collapse" id="navbarColor03">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
@@ -32,8 +33,8 @@
         </li>
       </ul>
       <form class="d-flex">
-        <input class="form-control me-sm-2" type="search" placeholder="검색">
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">검색</button>
+        <input class="form-control me-sm-2" type="search" placeholder="search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">search</button>
       </form>
     </div>
   </div>

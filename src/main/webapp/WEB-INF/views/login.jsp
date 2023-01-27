@@ -18,7 +18,7 @@
 <body>
 
 <jsp:include page="common/header.jsp"></jsp:include><br>
-<P>  ${member} </P>
+<jsp:include page="login/loginForm.jsp"></jsp:include><br>
 <jsp:include page="common/footer.jsp"></jsp:include><br>
 
 <!-- modal -->

@@ -1,5 +1,7 @@
 package com.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +18,8 @@ public class MainController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String main(Model model) {
-		MemberDTO member=service.selectMember();
-		model.addAttribute("member", member);
+		List<MemberDTO> list=service.selectAllMember();
+		model.addAttribute("member", list);
 		return "main";
 	}
 }
