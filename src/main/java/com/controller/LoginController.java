@@ -32,7 +32,7 @@ public class LoginController {
 		MemberDTO idDTO=null;
 		String mesg="";
 		String nextPage="redirect:/login";
-		idDTO=service.checkId(map);//아이디 있는지 확인
+		idDTO=service.selectMember(map);//아이디 있는지 확인
 		
 		if (idDTO!=null) {//해당 아이디의 회원이 있다면
 			MemberDTO member=service.login(map);//아이디, 비밀번호 매칭
@@ -57,7 +57,7 @@ public class LoginController {
 	//로그아웃
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(HttpSession session, RedirectAttributes m) {
-		System.out.println("logout====");
+		//System.out.println("logout====");
 		MemberDTO login=(MemberDTO)session.getAttribute("login");
 		session.invalidate();
 		m.addFlashAttribute("mesg", login.getMember_name()+"님 로그아웃 완료 :)");

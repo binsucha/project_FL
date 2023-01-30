@@ -33,16 +33,50 @@
 		values (#{id}, #{password}, #{member_name}, #{email}, #{phone}, 1)
 	</insert>
 	
-	<!-- 회원 찾기 -->
-	<select id="checkId" parameterType="hashMap" resultType="MemberDTO">
+	<!-- 아이디로 회원 찾기 -->
+	<select id="selectMember" parameterType="hashMap" resultType="MemberDTO">
 		select * from member
 		where id = #{id}
 	</select>
 	
-	<!-- 로그인 -->
+	<!-- 로그인 : 아이디-비밀번호 매칭 -->
 	<select id="login" parameterType="hashMap" resultType="MemberDTO">
 		select * from member
 		where id = #{id}
 		and password = #{password}
 	</select>
+	
+	<!-- 비밀번호 수정 -->
+	<update id="changePassword" parameterType="hashMap">
+		update member
+		set password = #{data}
+		where id = #{id}
+	</update>
+	
+	<!-- 이름 수정 -->
+	<update id="changeName" parameterType="hashMap">
+		update member
+		set member_name = #{data}
+		where id = #{id}
+	</update>
+	
+	<!-- 연락처 수정 -->
+	<update id="changePhone" parameterType="hashMap">
+		update member
+		set phone = #{data}
+		where id = #{id}
+	</update>
+	
+	<!-- 이메일 수정 -->
+	<update id="changeEmail" parameterType="hashMap">
+		update member
+		set email = #{data}
+		where id = #{id}
+	</update>
+	
+	<!-- 회원 탈퇴 -->
+	<delete id="deleteMember">
+		delete from member
+		where id = #{id}
+	</delete>
 </mapper>

@@ -2,7 +2,7 @@ package com.dto;
 
 import org.apache.ibatis.type.Alias;
 
-@Alias("MemberDTO")
+//@Alias("MemberDTO")//root-context.xml 설정이랑 충돌하는지 실행하면 오류나서 막아둠,, 한참 괜찮았는데 오류가 갑자기 발생하네?
 public class MemberDTO {
 	String id;
 	String password;

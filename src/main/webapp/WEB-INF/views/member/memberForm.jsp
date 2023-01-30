@@ -115,7 +115,7 @@
 			});
 		});//end 데이터 중복
 		
-		//중복 검사 후 input text 수정하면 Mesg 초기화
+		//중복 검사 후 input text 수정하면 Mesg 초기화//수정 사항 : Backspace는 왜 처리가 안 됨
 		$("input").keypress(function() {
 			var type=$(this).attr("id");
 			var text=$("#"+type+"Mesg").text();

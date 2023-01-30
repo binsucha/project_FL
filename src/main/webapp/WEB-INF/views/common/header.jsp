@@ -9,14 +9,26 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <c:choose>
-    	<c:when test="${not empty login}">
+    	<c:when test="${not empty login && login.member_role==1}">
 	    	<div class="collapse navbar-collapse" id="navbarColor03">
 		      <ul class="navbar-nav me-auto">
 		        <li class="nav-item">
 		          <a class="nav-link" href="${contextPath}/logout">로그아웃</a>
 		        </li>
 		        <li class="nav-item">
-		          <a class="nav-link" href="${contextPath}/mypage">마이페이지</a>
+		          <a class="nav-link" href="${contextPath}/mypage/${login.id}">마이페이지</a>
+		        </li>
+		      </ul>
+		    </div>
+    	</c:when>
+    	<c:when test="${not empty login && login.member_role==0}">
+	    	<div class="collapse navbar-collapse" id="navbarColor03">
+		      <ul class="navbar-nav me-auto">
+		        <li class="nav-item">
+		          <a class="nav-link" href="${contextPath}/logout">로그아웃</a>
+		        </li>
+		        <li class="nav-item">
+		          <a class="nav-link" href="${contextPath}/admin">관리자 페이지</a>
 		        </li>
 		      </ul>
 		    </div>
