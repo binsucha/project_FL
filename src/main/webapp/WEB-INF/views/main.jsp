@@ -27,6 +27,7 @@
 <body>
 
 <jsp:include page="common/header.jsp"></jsp:include><br>
+<jsp:include page="main/mainView.jsp"></jsp:include><br>
 <jsp:include page="common/footer.jsp"></jsp:include><br>
 
 <!-- modal -->

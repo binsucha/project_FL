@@ -1,6 +1,6 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!-- 부트스트랩 CDN -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
@@ -9,14 +9,13 @@
 <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.3/dist/journal/bootstrap.min.css" rel="stylesheet"></link>
 
 <html>
-	<head>
-	<meta charset="UTF-8">
+<head>
 	<title>Foodie League</title>
-	</head>
+</head>
 <body>
 
 <jsp:include page="common/header.jsp"></jsp:include><br>
-ADMIN PAGE=====<br>
+<jsp:include page="shop/searchLocation.jsp"></jsp:include><br>
 <jsp:include page="common/footer.jsp"></jsp:include><br>
 
 <!-- modal -->
@@ -40,6 +39,5 @@ ADMIN PAGE=====<br>
 </div>
 <button type="button" id="modalBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal" style="display: none;">modal</button>
 <!-- end modal -->
-
 </body>
 </html>
