@@ -173,6 +173,27 @@
 <!-- 1.10.3 org.jsoup.HttpStatusException: HTTP error fetching URL. Status=400 : 롯데리아 철산점 이런식으로 공백이 있으면 오류가 나는 거 같음 -->
 </dependency>
 
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<dependency>
+<groupId>com.fasterxml.jackson.core</groupId>
+<artifactId>jackson-databind</artifactId>
+<version>2.13.4</version>
+</dependency>
+
+<!-- 파일 업로드 -->
+<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+<dependency>
+<groupId>commons-fileupload</groupId>
+<artifactId>commons-fileupload</artifactId>
+<version>1.4</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+<dependency>
+<groupId>commons-io</groupId>
+<artifactId>commons-io</artifactId>
+<version>2.6</version>
+</dependency>
+
 <!-- dependency 추가끝 부분 -->
 	</dependencies>
     <build>

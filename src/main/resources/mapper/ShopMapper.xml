@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ShopMapper">
+	<!-- 가게 데이터 중복 확인 -->
+	<select id="checkData" parameterType="hashMap" resultType="String">
+		select shop_name from shop
+		where shop_contact = #{shopContact}
+	</select>
+	
+	<!-- 카테고리 출력 -->
+	<select id="category" resultType="CategoryDTO">
+		select * from category
+	</select>
+	
+	<!-- 가게 등록 -->
+	<insert id="insertShop" parameterType="hashMap">
+		insert into shop (shop_no, shop_name, category_no, category2_no, shop_location, shop_contact, shop_info, average_rate, shop_created, shop_hits)
+		values (SHOP_SEQ.nextval, #{shopName}, #{category}, #{category2}, #{shopLocation}, #{shopContact}, #{shopInfo}, 0, sysdate, 0)
+
+	</insert>
+	
+	<!-- 가게 번호 가져오기 -->
+	<select id="selectShopNo" parameterType="hashMap" resultType="int">
+		select shop_no from shop
+		where shop_name = #{shopName}
+		and shop_contact = #{shopContact}
+	</select>
+	
+	<!-- 가게 이미지 등록 -->
+	<insert id="insertShopImg" parameterType="hashMap">
+		insert into shop_img (shop_no, shop_img_rank, shop_img_route)
+		values (#{shopNo}, #{imgRank}, #{imgRoute})
+	</insert>
+	
+</mapper>
