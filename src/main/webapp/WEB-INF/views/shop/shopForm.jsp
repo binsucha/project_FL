@@ -4,11 +4,10 @@
 
 <style>
 	.container {
-		display: flex;
-		flex-direction: column;
+		margin-top: 20px;
 	}
-	.form-group {
-		width: 50%;
+	.row {
+		justify-content: center;
 	}
 	legend {
 		color: #eb6864;
@@ -17,51 +16,65 @@
 	label {
 		font-weight: bolder;
 	}
+	#shopName {
+		display: inline;
+		width: 60%;
+	}
+	#search {
+		display: inline;
+		float: right;
+	}
+	#shopContact {
+		width: 60%;
+	}
+	textarea {
+		height: 28%;
+		resize: none;
+	}
 </style>
 
 <form method="post" enctype="multipart/form-data">
-<div class="container" style="margin-top: 20px;">
+<div class="container">
   <fieldset>
     <legend>가게 등록</legend>
-    <div class="container col-md-8" tabindex="0">
-		    <div class="form-group" style="display:inline;">
-		   	  <label for="shopName" class="form-label mt-4">가게 이름</label>
-		      <input type="text" class="form-control" id="shopName" name="shopName" aria-describedby="shopNameHelp" placeholder="가게 이름+지역으로 검색"
-		      			style="display: inline-block;">
-		      <button type="button" class="btn btn-outline-primary btn-sm" id="search">가게 검색</button>
+    <div class="row" tabindex="0">
+	    <div class="col-md-6" style="width: 30%;">
+		    <div class="form-group">
+		   	  <label for="shopName" class="form-label mt-4" style="display: block;">가게 이름</label>
+		      <input type="text" class="form-control" id="shopName" name="shopName" aria-describedby="shopNameHelp" placeholder="지역+이름">
+		      <button type="button" class="btn btn-outline-primary" id="search">가게 검색</button>
 		    </div>
-		    <div class="">
-		    <div class="form-group" style="display: inline-block;">
+		    <div class="form-group">
 		      <label for="category" class="form-label mt-4">카테고리</label>
 		      <select class="form-select" id="category" name="category">
 		      <option value="none" selected disabled hidden>카테고리 선택</option>
-		      <c:forEach var="category" items="${categoryList}" begin="0" end="3">
+		      <c:forEach var="category" items="${categoryList}">
 		        <option value="${category.category_no}">${category.category_name}</option>
 		      </c:forEach>
 		      </select>
 		    </div>
-		    <div class="form-group" style="display: inline-block;">
+		    <div class="form-group">
 		   	  <label for="category2" class="form-label mt-4">카테고리2</label>
 		      <select class="form-select" id="category2" name="category2">
 		      <option value="none" selected disabled hidden>카테고리 선택</option>
-		      <c:forEach var="category" items="${categoryList}" begin="4">
-		        <option value="${category.category_no}">${category.category_name}</option>
+		      <c:forEach var="category2" items="${category2List}">
+		        <option value="${category2.category2_no}">${category2.category2_name}</option>
 		      </c:forEach>
 		      </select>
 		    </div>
-		    </div>
 		    <div class="form-group">
 		   	  <label for="shopLocation" class="form-label mt-4">가게 위치</label>
-		      <input type="text" class="form-control" id="shopLocation" name="shopLocation" style="width: 200%;">
+		      <input type="text" class="form-control" id="shopLocation" name="shopLocation">
 		    </div>
 		    <div class="form-group">
 		   	  <label for="shopContact" class="form-label mt-4">연락처</label>
 		      <input type="text" class="form-control" id="shopContact" name="shopContact" aria-describedby="shopContactHelp">
 		    </div>
+	    </div>
+	    <div class="col-md-6" style="width: 30%;">
 			<div class="form-group">
 		   	  <label for="shopInfo" class="form-label mt-4">가게 정보</label>
-		      <input type="text" class="form-control" id="shopInfo" name="shopInfo" aria-describedby="shopInfoHelp" placeholder="가게 정보~~~"
-		      			style="width: 200%; height: 400%;">
+		      <textarea class="form-control" id="shopInfo" name="shopInfo" aria-describedby="shopInfoHelp" placeholder="상세 정보를 추가하세요."></textarea>
 		    </div>
 		    <div class="form-group">
 		      <label for="imgFile" class="form-label mt-4">이미지 등록</label>
@@ -75,8 +88,11 @@
 		      <label for="imgFile3" class="form-label mt-4">이미지 등록3</label>
 		      <input class="form-control" type="file" id="imgFile3" name="imgFile" accept="image/*" multiple>
 		    </div>
+	    </div>
+	    <div class="col-md-12" style="margin-top: 55;">
+		   	<button type="submit" class="btn btn-primary" style="float: right;">등록하기</button>
+		</div>
     </div>
-    <button type="submit" class="btn btn-primary" style="float: right;">등록하기</button>
   </fieldset>
 </div>
 </form>
@@ -90,7 +106,7 @@
 			//console.log(shopName);
 			$.ajax({
 				type : "get",
-				url : "${contextPath}/shop/"+shopName,
+				url : "${contextPath}/"+shopName,
 				dataType: "JSON",
 				contentType : "application/json; charset=UTF-8",
 				//dataType : "text",

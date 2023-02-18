@@ -14,6 +14,11 @@
 		select * from category
 	</select>
 	
+	<!-- 카테고리2 출력 -->
+	<select id="category2" resultType="Category2DTO">
+		select * from category2
+	</select>
+	
 	<!-- 가게 등록 -->
 	<insert id="insertShop" parameterType="hashMap">
 		insert into shop (shop_no, shop_name, category_no, category2_no, shop_location, shop_contact, shop_info, average_rate, shop_created, shop_hits)
@@ -33,5 +38,29 @@
 		insert into shop_img (shop_no, shop_img_rank, shop_img_route)
 		values (#{shopNo}, #{imgRank}, #{imgRoute})
 	</insert>
+	
+	<!-- 가게 이미지 가져오기 -->
+	<select id="selectShopImg" parameterType="hashMap" resultType="ShopImgDTO">
+		select * from shop_img
+		where shop_no = #{imgShopNo}
+		order by shop_img_rank
+	</select>
+	
+	<!-- 가게 상세 페이지 -->
+	<select id="selectShop" resultType="ShopDTO">
+		select s.shop_no, shop_name, s.category_no, s.category2_no, shop_location,
+			shop_contact, shop_info, average_rate, shop_created, shop_hits,
+			shop_img_rank, shop_img_route,
+			c.category_name, c.category_rank,
+			c2.category2_name, c2.category2_rank
+		from shop s join shop_img i
+				on s.shop_no = i.shop_no
+			join category c
+				on s.category_no = c.category_no
+			join category2 c2
+				on s.category2_no = c2.category2_no
+		where s.shop_no = #{shopNo}
+		and shop_img_rank = 1
+	</select>
 	
 </mapper>

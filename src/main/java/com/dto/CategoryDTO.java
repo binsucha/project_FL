@@ -1,9 +1,9 @@
 package com.dto;
 
 public class CategoryDTO {
-	int category_no;
-	String category_name;
-	int category_rank;
+	private int category_no;
+	private String category_name;
+	private int category_rank;
 	
 	public CategoryDTO() {
 		super();

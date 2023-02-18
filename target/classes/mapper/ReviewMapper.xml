@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ReviewMapper">
+	<!-- 전체 가게 목록 -->
+	<select id="selectAllShop" resultType="ShopDTO" parameterType="hashMap">
+		select s.shop_no, shop_name, s.category_no, s.category2_no, shop_location,
+			shop_contact, shop_info, average_rate, shop_created, shop_hits,
+			shop_img_rank, shop_img_route,
+			c.category_name, c.category_rank,
+			c2.category2_name, c2.category2_rank
+		from shop s join shop_img i
+				on s.shop_no = i.shop_no
+			join category c
+				on s.category_no = c.category_no
+			join category2 c2
+				on s.category2_no = c2.category2_no
+		<where>
+			shop_img_rank = 1<!-- 가게 이미지 1개만 출력 -->
+			<if test="categoryNo != null and !categoryNo.equals('')">
+				and	s.category_no = #{categoryNo}<!-- 선택된 카테고리만 출력 -->
+			</if>
+			<if test="searchName != null and !searchName.equals('')">
+				and	${searchName} like '%${searchValue}%'
+			</if>
+		</where>
+		order by
+		<if test="sortBy != null and !sortBy.equals('')">
+			${sortBy} desc,
+		</if>
+		shop_created desc, s.shop_no, shop_img_rank<!-- default 정렬 기준 -->
+	</select>
+	
+	<!-- 전체 가게 개수 -->
+	<select id="countTotalShop" parameterType="hashMap" resultType="int">
+		select count(*) from shop
+		<where>
+			<if test="categoryNo != null and !categoryNo.equals('')">
+				and	category_no = #{categoryNo}<!-- 선택된 카테고리만 출력 -->
+			</if>
+			<if test="searchName!=null and !searchName.equals('')">
+				and	${searchName} like '%${searchValue}%'
+			</if>
+		</where>
+	</select>
+		
+</mapper>

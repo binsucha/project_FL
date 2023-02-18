@@ -11,7 +11,7 @@ import com.dto.MemberDTO;
 @Service
 public class MainService {
 	@Autowired
-	MainDAO dao;
+	private MainDAO dao;
 	
 	public List<MemberDTO> selectAllMember() {
 		return dao.selectAllMember();

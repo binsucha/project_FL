@@ -17,7 +17,7 @@ import com.service.MemberService;
 @Controller
 public class LoginController {
 	@Autowired
-	MemberService service;
+	private MemberService service;
 	
 	//로그인 화면
 	@RequestMapping(value = "/login", method = RequestMethod.GET)

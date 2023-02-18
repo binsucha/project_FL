@@ -18,8 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dto.Category2DTO;
 import com.dto.CategoryDTO;
+import com.dto.ShopDTO;
+import com.dto.ShopImgDTO;
 import com.service.ShopService;
 
 @Controller
@@ -39,15 +43,18 @@ public class ShopController {
 		System.out.println("shopForm====");
 		//카테고리 데이터 출력
 		List<CategoryDTO> categoryList=service.category();
+		List<Category2DTO> category2List=service.category2();
 		//System.out.println(categoryList);
+		//System.out.println(category2List);
 		ModelAndView mav=new ModelAndView();
 		mav.addObject("categoryList", categoryList);
+		mav.addObject("category2List", category2List);
 		mav.setViewName("shopForm");
 		return mav;
 	}
 	
 	//네이버에서 가게 이름 검색 결과
-	@RequestMapping(value = "/shop/{shopName}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{shopName}", method = RequestMethod.GET)
 	@ResponseBody
 	public HashMap<String, String> shopInfo(@PathVariable("shopName") String shopName) throws Exception {
 		String url="https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query="+shopName;//네이버에서 가게 이름 검색한 url로 지정--& 주의
@@ -108,7 +115,6 @@ public class ShopController {
 	
 	//가게 등록
 	@RequestMapping(value = "/shop/{shopName}", method = RequestMethod.POST)
-	@ResponseBody//지우기
 	public String insertShop(@PathVariable("shopName") String shopName, @RequestParam Map<String, String> map,
 			@RequestParam("imgFile") List<MultipartFile> uploadFiles) {
 		//System.out.println("insertShop===="+shopName+map);//shopInfo는 데이터 없으면 공백, not null--Nullpointer err 없음
@@ -175,6 +181,59 @@ public class ShopController {
 			e.getMessage();
 		}
 		
+		return "redirect:/reviewBoard";
+	}
+
+	//가게 상세 페이지
+	@RequestMapping(value = "/shop/{shopNo}", method = RequestMethod.GET)
+	public ModelAndView shop(@PathVariable("shopNo") int shopNo) {
+		System.out.println("shop===="+shopNo);
+		ShopDTO shop=service.selectShop(shopNo);
+		System.out.println(shop);
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("shop", shop);
+		mav.setViewName("shopDetail");
+		return mav;
+	}
+	
+	//가게 정보 수정 폼
+	@RequestMapping(value = "/shop/{shopNo}/admin", method = RequestMethod.GET)
+	public ModelAndView changeForm(@PathVariable("shopNo") int shopNo) {
+		System.out.println("changeForm===="+shopNo);
+		
+		//가게 정보
+		ShopDTO shop=service.selectShop(shopNo);
+		System.out.println(shop);
+		
+		//가게 이미지
+		HashMap<String, String> map=new HashMap<String, String>();
+		map.put("imgShopNo", Integer.toString(shopNo));
+		List<ShopImgDTO> imgList=service.selectShopImg(map);
+		System.out.println(imgList);
+		
+		//카테고리 데이터
+		List<CategoryDTO> categoryList=service.category();
+		List<Category2DTO> category2List=service.category2();
+		System.out.println(categoryList);
+		System.out.println(category2List);
+		
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("shop", shop);
+		mav.addObject("imgList", imgList);
+		mav.addObject("categoryList", categoryList);
+		mav.addObject("category2List", category2List);
+		mav.setViewName("shopChangeForm");
+		
+		return mav;
+	}
+	
+	//가게 정보 수정
+	@RequestMapping(value = "/shop/{shopNo}/admin", method = RequestMethod.POST)
+	public String changeShop(@PathVariable("shopNo") String shopNo, @RequestParam Map<String, String> map,
+			@RequestParam("imgFile") List<MultipartFile> uploadFiles) {
+		System.out.println("changeShop====가게 번호 : "+shopNo);
+		System.out.println("changeShop====map : "+map);
+		System.out.println("changeShop====업로드 이미지 : "+uploadFiles);
 		return "";
 	}
 }

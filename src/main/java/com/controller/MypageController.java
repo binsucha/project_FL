@@ -20,7 +20,7 @@ import com.service.MemberService;
 @Controller
 public class MypageController {
 	@Autowired
-	MemberService service;
+	private MemberService service;
 	
 	//마이페이지 메인
 	@RequestMapping(value = "/mypage/{id}", method = RequestMethod.GET)

@@ -1,11 +1,11 @@
 package com.dto;
 
 public class CrawlingDTO {
-	String shop_url;
-	String shop_name;
-	String category;
-	String status;
-	String rate;
+	private String shop_url;
+	private String shop_name;
+	private String category;
+	private String status;
+	private String rate;
 	
 	public CrawlingDTO() {
 		super();

@@ -14,7 +14,7 @@ import com.service.MainService;
 @Controller
 public class MainController {
 	@Autowired
-	MainService service;
+	private MainService service;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String main(Model model) {

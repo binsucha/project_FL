@@ -8,9 +8,11 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.dto.Category2DTO;
 import com.dto.CategoryDTO;
 import com.dto.MemberDTO;
 import com.dto.ShopDTO;
+import com.dto.ShopImgDTO;
 
 @Repository
 public class ShopDAO {
@@ -22,8 +24,14 @@ public class ShopDAO {
 		return session.selectOne("ShopMapper.checkData", map);
 	}
 
+	//카테고리 출력
 	public List<CategoryDTO> category() {
 		return session.selectList("ShopMapper.category");
+	}
+	
+	//카테고리2 출력
+	public List<Category2DTO> category2() {
+		return session.selectList("ShopMapper.category2");
 	}
 	
 	//가게 등록
@@ -41,5 +49,14 @@ public class ShopDAO {
 		return session.insert("ShopMapper.insertShopImg", map);
 	}
 
+	//가게 이미지 가져오기
+	public List<ShopImgDTO> selectShopImg(HashMap<String, String> map) {
+		return session.selectList("ShopMapper.selectShopImg", map);
+	}
+
+	//가게 상세 페이지
+	public ShopDTO selectShop(int shopNo) {
+		return session.selectOne("ShopMapper.selectShop", shopNo);
+	}
 	
 }

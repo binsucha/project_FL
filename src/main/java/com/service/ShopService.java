@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.dao.MemberDAO;
 import com.dao.ShopDAO;
+import com.dto.Category2DTO;
 import com.dto.CategoryDTO;
 import com.dto.MemberDTO;
 import com.dto.ShopDTO;
+import com.dto.ShopImgDTO;
 
 @Service
 public class ShopService {
@@ -23,8 +25,14 @@ public class ShopService {
 		return dao.checkData(map);
 	}
 
+	//카테고리 출력
 	public List<CategoryDTO> category() {
 		return dao.category();
+	}
+	
+	//카테고리2 출력
+	public List<Category2DTO> category2() {
+		return dao.category2();
 	}
 
 	//가게 등록
@@ -42,5 +50,14 @@ public class ShopService {
 		return dao.insertShopImg(map);
 	}
 
+	//가게 이미지 가져오기
+	public List<ShopImgDTO> selectShopImg(HashMap<String, String> map) {
+		return dao.selectShopImg(map);
+	}
+
+	//가게 상세 페이지
+	public ShopDTO selectShop(int shopNo) {
+		return dao.selectShop(shopNo);
+	}
 
 }

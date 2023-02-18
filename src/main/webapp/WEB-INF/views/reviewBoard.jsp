@@ -16,6 +16,7 @@
 <body>
 
 <jsp:include page="common/header.jsp"></jsp:include><br>
+<jsp:include page="shop/category.jsp"></jsp:include><br>
 <jsp:include page="reviewBoard/reviewBoard.jsp"></jsp:include><br>
 <jsp:include page="common/footer.jsp"></jsp:include><br>
 
