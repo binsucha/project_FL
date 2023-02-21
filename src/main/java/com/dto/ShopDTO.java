@@ -8,7 +8,7 @@ public class ShopDTO {
 	private String shop_location;
 	private String shop_contact;
 	private String shop_info;
-	private int average_rate;
+	private double average_rate;
 	private String shop_created;
 	private int shop_hits;
 	
@@ -26,7 +26,7 @@ public class ShopDTO {
 	}
 	
 	public ShopDTO(int shop_no, String shop_name, int category_no, int category2_no, String shop_location,
-			String shop_contact, String shop_info, int average_rate, String shop_created, int shop_hits,
+			String shop_contact, String shop_info, double average_rate, String shop_created, int shop_hits,
 			String shop_img_rank, String shop_img_route, String category_name, String category_rank,
 			String category2_name, String category2_rank) {
 		super();
@@ -104,11 +104,11 @@ public class ShopDTO {
 		this.shop_info = shop_info;
 	}
 	
-	public int getAverage_rate() {
+	public double getAverage_rate() {
 		return average_rate;
 	}
 	
-	public void setAverage_rate(int average_rate) {
+	public void setAverage_rate(double average_rate) {
 		this.average_rate = average_rate;
 	}
 	

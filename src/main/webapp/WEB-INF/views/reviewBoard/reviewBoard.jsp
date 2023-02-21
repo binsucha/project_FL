@@ -29,6 +29,9 @@
 	.card-title {
 		cursor: default;
 	}
+	.page-item {
+		cursor: pointer;
+	}
 </style>
 
 <c:set value="${paging.list}" var="shopList"/>

@@ -2,6 +2,7 @@ package com.dao;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.dto.PageDTO;
+import com.dto.ReviewDTO;
 import com.dto.ShopDTO;
 
 @Repository
@@ -40,6 +42,17 @@ public class ReviewDAO {
 	//가게 목록 전체 개수 for 페이징
 	private int countTotalShop(HashMap<String, String> map) {
 		return session.selectOne("ReviewMapper.countTotalShop", map);
+	}
+
+	//후기 데이터 저장
+	public void insertReview(Map<String, Object> map) {
+		int num=session.insert("ReviewMapper.insertReview", map);
+		System.out.println(num+"개 후기 저장 완료");
+	}
+
+	//가게 후기 목록
+	public List<ReviewDTO> selectShopReviews(int shopNo) {
+		return session.selectList("ReviewMapper.selectShopReviews", shopNo);
 	}
 	
 }

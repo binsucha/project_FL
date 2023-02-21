@@ -1,8 +1,11 @@
 package com.controller;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dto.Category2DTO;
@@ -74,6 +78,61 @@ public class ReviewController {
 		System.out.println(imgList);
 		
 		return imgList;
+	}
+	
+	//가게 리뷰 등록
+	@RequestMapping(value = "/review/{shopNo}", method = RequestMethod.POST)
+	public String insertReview(@PathVariable("shopNo") int shopNo, @RequestParam Map<String, Object> map,
+			@RequestParam("imgFile") MultipartFile uploadFile) {
+		System.out.println("insertReview===="+shopNo+"\t"+map+"\t"+uploadFile);
+		map.put("shopNo", shopNo);
+		
+		//업로드 파일 저장 location
+		String location = "C://eclipse//spring_project_FL//workspace//FoodieLeague//src//main//webapp//resources//review";
+		try {
+			//이미지가 있으면 map에 put && 파일 업로드
+			//업로드 한 파일명//업로드 안 하면 이름 공백
+			String fileName=uploadFile.getOriginalFilename();
+			System.out.println("업로드 파일명 : "+fileName);
+			
+			if (!fileName.equals("")) {//업로드 했을 때만
+				System.out.println("업로드 할 파일이  있습니다.");
+				
+				//폴더 위치
+				File folder=new File(location);
+				if (!folder.exists()) folder.mkdirs();
+				
+				//파일의 확장자 추출
+				String ext=fileName.substring(fileName.indexOf("."));
+				System.out.println("파일 확장자 : "+ext);
+				
+				//reName 규칙 설정
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+				int rdv=(int)(Math.random()*1000);
+				String reName=sdf.format(System.currentTimeMillis())+"_"+rdv+ext;
+				System.out.println("파일 reName : "+reName);
+				
+				//파일명 저장
+				map.put("reviewImgRoute", reName);
+				System.out.println("이미지 있는 map : "+map);
+				
+				//이미지 포함 후기 데이터 저장
+				service.insertReview(map);
+				
+				//파일 업로드
+				File destination=new File(location+File.separator+reName);
+				uploadFile.transferTo(destination);
+			} else {
+				System.out.println("업로드 할 파일이 없습니다.");
+				System.out.println("이미지 없는 map : "+map);
+				
+				//이미지 없는 후기 데이터 저장
+				service.insertReview(map);
+			}
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		return "redirect:/shop/"+shopNo;
 	}
 	
 }

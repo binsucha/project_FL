@@ -22,14 +22,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dto.Category2DTO;
 import com.dto.CategoryDTO;
+import com.dto.ReviewDTO;
 import com.dto.ShopDTO;
 import com.dto.ShopImgDTO;
+import com.service.ReviewService;
 import com.service.ShopService;
 
 @Controller
 public class ShopController {
 	@Autowired
 	private ShopService service;
+	@Autowired/////의존도 설정 안 하면 NullPointerException
+	private ReviewService reviewService;
 	
 	@RequestMapping(value = "/location", method = RequestMethod.GET)
 	public String searchLocation() {
@@ -188,10 +192,30 @@ public class ShopController {
 	@RequestMapping(value = "/shop/{shopNo}", method = RequestMethod.GET)
 	public ModelAndView shop(@PathVariable("shopNo") int shopNo) {
 		System.out.println("shop===="+shopNo);
+		
+		//가게 정보
 		ShopDTO shop=service.selectShop(shopNo);
 		System.out.println(shop);
+		
+		//가게 이미지
+		HashMap<String, String> map=new HashMap<String, String>();
+		map.put("imgShopNo", Integer.toString(shopNo));
+		List<ShopImgDTO> imgList=service.selectShopImg(map);
+		
+		//카테고리
+		List<CategoryDTO> categoryList=service.category();
+		
+		//가게 후기
+		List<ReviewDTO> reviewList=reviewService.selectShopReviews(shopNo);////NullPointerException
+		for (ReviewDTO reviewDTO : reviewList) {
+			System.out.println("후기 : "+reviewDTO);
+		}
+		
 		ModelAndView mav=new ModelAndView();
 		mav.addObject("shop", shop);
+		mav.addObject("imgList", imgList);
+		mav.addObject("categoryList", categoryList);
+		mav.addObject("reviewList", reviewList);
 		mav.setViewName("shopDetail");
 		return mav;
 	}

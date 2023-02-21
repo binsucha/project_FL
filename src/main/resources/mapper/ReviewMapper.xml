@@ -44,5 +44,27 @@
 			</if>
 		</where>
 	</select>
-		
+	
+	<!-- 후기 데이터 저장 -->
+	<insert id="insertReview" parameterType="hashMap">
+		insert all
+		into review (review_no, id, shop_no, rate, review_content, review_created)
+		values (REVIEW_SEQ.nextval, #{id}, #{shopNo}, #{rating}, #{content}, sysdate)
+		<if test="reviewImgRoute != null and !reviewImgRoute.equals('')">
+			into review_img (review_no, review_img_route)
+			values (REVIEW_SEQ.nextval, #{reviewImgRoute})
+		</if>
+		select * from dual
+	</insert>
+	
+	<!-- 가게 후기 목록 -->
+	<select id="selectShopReviews" resultType="ReviewDTO">
+		select r.review_no, r.id, shop_no, rate, review_content, review_created, i.review_img_route, member_name
+		from review r LEFT OUTER JOIN review_img i
+				ON r.review_no = i.review_no
+			join member m
+				on r.id = m.id
+		where shop_no = #{shopNo}
+		order by r.review_no desc
+	</select>
 </mapper>
