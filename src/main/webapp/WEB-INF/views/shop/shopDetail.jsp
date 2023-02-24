@@ -43,12 +43,32 @@
 	.form-label {
 		font-size: 15;
 	}
-	.submitComment {
+	.submitComment, .submitEdit {
 		color: #EB6864;
 		float: right;
 		cursor: pointer;
-		margin-top: 13;
+		margin-top: 18;
 		font-weight: bold;
+		font-size: 14;
+	}
+	.commentWriter, .writer {
+		font-size: 14;
+		font-weight: bold;
+	}
+	.commentContent {
+		font-size: 14;
+		color: #EB6864;
+	}
+	.commentCreated {
+		font-size: 13;
+		float: right;
+	}
+	.commentEdit, .commentDelete{
+		font-size: 13;
+		cursor: pointer;
+	}
+	.commentInput, .editInput {
+		font-size: 14;
 	}
 </style>
 
@@ -130,7 +150,7 @@
 				    <div id="reviewContent" class="accordion-collapse collapse" aria-labelledby="heading" data-bs-parent="#reviewForm">
 				      <div class="accordion-body">
 					    <div class="star-rating row">
-					        <div class="stars col-md-5" data-rating="">
+					        <div class="stars col-md-5">
 					            <i class="fa fa-star fa-lg"></i>
 					            <i class="fa fa-star fa-lg"></i>
 					            <i class="fa fa-star fa-lg"></i>
@@ -171,20 +191,23 @@
 				    <span class="text-muted" style="float: right;">${review.review_created}</span>
 				  </div>
 				  <div class="card-footer text-muted" id="reviewComments_${review.review_no}">
-				    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#comments_${review.review_no}" aria-expanded="false" aria-controls="comments_${review.review_no}">
+				    <button class="accordion-button collapsed" type="button" name="commentsBtn" data-review-no="${review.review_no}" data-bs-toggle="collapse" data-bs-target="#comments_${review.review_no}" aria-expanded="false" aria-controls="comments_${review.review_no}">
 						댓글
 				    </button>
 				    <div id="comments_${review.review_no}" class="accordion-collapse collapse" data-bs-parent="#reviewComments_${review.review_no}">
 				      <div class="accordion-body">
 				      	<div class="row">
 					      	<div class="col-md-10">
-					      		<input id="comment_${review.review_no}" name="comment" style="width: 100%; margin: 10 0 10 0;">
+					      		<input id="commentInput_${review.review_no}" class="form-control commentInput" name="comment" style="width: 100%; margin: 10 0 10 0;">
 					      	</div>
 					      	<div class="col-md-2">
-					      		<p class="submitComment" data-review-no="${review.review_no}">등록</p>
+					      		<p class="submitComment" data-review-no="${review.review_no}" data-comment-no="">입력</p>
 					      	</div>
 				      	</div>
-				        <strong>Harry</strong>Styles<code>concert</code>in Korea
+				      	<!-- 후기의 댓글 append -->
+				      	<div class="commentList_${review.review_no}" data-id="${review.id}">
+				      		
+				      	</div>
 				      </div>
 				    </div>
 				  </div>
@@ -198,10 +221,12 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		//(관리자) 수정하기 버튼
 		$("#change").click(function() {
 			//location.href="${contextPath}/shop/${shop.shop_no}/admin";
-		});//end 수정하기
+		});//end 수정하기 버튼
 		
+		//이미지 변경
 		$(".the-others").mouseover(function() {
 			var changedImg=$(this).attr("data-img");
 			$(".first-img").attr("src","${contextPath}/resources/upload/"+changedImg);
@@ -212,6 +237,7 @@
 			$(".first-img").attr("src","${contextPath}/resources/upload/"+firstImg);
 		});//end 이미지 변경
 		
+		//별점 선택
 		$(".stars .fa").click(function() {
 			$(this).addClass("active");//class 속성 추가//해당 class 선택 후 스타일 설정
 
@@ -223,9 +249,7 @@
 			//텍스트내용을 출력 text, 태그+텍스트 html
 			var num=$(this).index();
 			var starRate=num+1;
-			$(".stars.col-md-5").attr("data-rating", starRate);
 			$("input[name=rating]").val(starRate);
-			$(".text").text(starRate);
 			
 		    if(starRate==1) {
 		        $(".text").html("<h6>별로예요 😢</h6>");
@@ -242,35 +266,203 @@
 		
 		//로그아웃 상태
 		if ("${login.id}"=="") {
+			var mesg="로그인 후 이용하세요.";
+			
 			//후기 아코디언 열리지 않도록
 			$("#reviewFormBtn").attr("data-bs-toggle","");
 			$("#reviewFormBtn").click(function() {
-				$("#modalBtn").trigger("click");
-				$("#modalMesg").text("로그인 후 이용하세요.");
+				checkLogin(mesg);
 			});
 			
 			//후기의 댓글창 readonly
 			$("input[name=comment]").attr("readonly", "readonly");
 			$("input[name=comment]").click(function() {
-				$("#modalBtn").trigger("click");
-				$("#modalMesg").text("로그인 후 이용하세요.");
+				checkLogin(mesg);
 			});
 		}
 		
+		//후기 등록
 		$("#submitReview").click(function() {
-			//로그인 검사
+			//로그인 검사--로그인 상태면 아코디언 collapse
 			//공백 검사
-			$("form").submit();
-		});//end 리뷰 등록
+			var starRate=$("input[name=rating]").val();
+			var content=$("textarea[name=content]").val();
+			console.log(starRate, content);
+			
+			if (starRate=="") {
+				console.log("별점 선택 안 함");
+			} else if (content=="") {
+				console.log("내용 입력 안 함");
+			} else {
+				console.log("공백 검사 완료");
+				$("form").submit();//////////
+			}
+		});//end 후기 등록
 		
+		//후기의 댓글 누르면 목록 가져와서 출력
+		$("button[name=commentsBtn]").click(function() {
+			var reviewNo=$(this).attr("data-review-no");
+			
+			//댓글 아코디언 닫을 경우 출력됐던 데이터 삭제
+			//console.log("아코디언 높이 :", $("#comments_"+reviewNo).css("height"));
+			if ($("#comments_"+reviewNo).css("height")!="0px") {//아코디언 닫을 때
+				//console.log("닫음");
+				$(".commentList_"+reviewNo).empty();//div 자식 empty
+			} else {//아코디언 열 때
+				//댓글 남기는 후기의 작성자
+				var reviewWriter=$(".commentList_"+reviewNo).attr("data-id");
+				//console.log("후기 작성자 :", reviewWriter);
+				showComments(reviewNo, reviewWriter);
+			}
+		});//end 댓글 목록 출력
+		
+		//댓글 입력 후 출력
 		$(".submitComment").click(function() {
 			var reviewNo=$(this).attr("data-review-no");
-			var comment=$("#comment_"+reviewNo).val();
+			var commentNo=$(this).attr("data-comment-no");
+			//console.log(reviewNo,"의 마지막 댓글 번호 :", commentNo);
+			
+			//댓글 남기는 후기의 작성자
+			var reviewWriter=$(".commentList_"+reviewNo).attr("data-id");
+			//console.log("후기 작성자 :", reviewWriter);
+			
+			var comment=$("#commentInput_"+reviewNo).val();
+			
 			if (comment.length==0) {
-				console.log(reviewNo, "내용을 입력해주세요.");
+				checkLogin("내용을 입력해주세요.");
 			} else {
-				console.log(reviewNo, comment);
+				//console.log(reviewNo, comment);
+				$.ajax({
+					type : "post",
+					url : "${contextPath}/review/"+reviewNo+"/comment",
+					data : {
+						id : "${login.id}",
+						reviewNo : reviewNo,
+						comment : comment
+					},
+					dataType : "text",
+					success : function(data, status, xhr) {
+						$("#commentInput_"+reviewNo).val("");
+						showComments(reviewNo, reviewWriter);
+					},
+					error : function(xhr, status, error) {
+						console.log(error);
+					}
+				});//end ajax
 			}
-		});//end 댓글 등록
+		});//end 댓글 입력
+		
+		//modal close 후 이벤트 중복 off
+		$("#deleteModal").on("hidden.bs.modal", function () {
+			$("#okayDelete").off("click").on("click", function() {
+				console.log("중복 클릭 off");
+			});//end fn
+		});
 	});//end ready
+	
+	function checkLogin(mesg) {
+		$("#modalBtn").trigger("click");
+		$("#modalMesg").text(mesg);
+	}
+	
+	//댓글 목록 출력
+	function showComments(reviewNo, reviewWriter) {
+		console.log("review no :", reviewNo);
+		
+		//마지막 댓글 번호
+		var last=$(".commentList_"+reviewNo).children(":last");
+		var lastNo=last.attr("data-no");
+		//console.log("마지막 댓글 번호 :", lastNo);//undefined
+		
+		//댓글 append
+		$.ajax({
+			type : "get",
+			url : "${contextPath}/review/"+reviewNo+"/comment",
+			data : {
+				reviewNo : reviewNo,
+				lastNo : lastNo,
+				reviewWriter : reviewWriter
+			},
+			dataType: "text",//success data List=>jsp return
+			async: false,
+			success : function(data, status, xhr) {
+				//console.log(data);//comment.jsp return
+				$(".commentList_"+reviewNo).append(data);
+			},
+			error : function(xhr, status, error) {
+				console.log(error);
+			}
+		});//end ajax
+		
+		//마지막 댓글 번호 업데이트
+		var last=$(".commentList_"+reviewNo).children(":last");
+		var lastNo=last.attr("data-no");
+		console.log("마지막 댓글 번호 업데이트 :", lastNo);
+		$(".submitComment").attr("data-comment-no", lastNo);
+	}
+	
+	//댓글 수정창 출력-닫힘
+	function showEditDiv(comment_no) {
+		if ($("#editDiv_"+comment_no).css("display")=="none") {//수정창 닫힘 상태
+			//console.log(comment_no, "수정창 닫힘 상태");
+			$("#editDiv_"+comment_no).css("display","");//출력
+			var content=$("#editInput_"+comment_no).val();
+			$("#editInput_"+comment_no).focus().val("").val(content);//텍스트 마지막에 focus
+		} else {
+			//console.log(comment_no, "수정창 출력 상태");
+			$("#editDiv_"+comment_no).css("display","none");//닫음
+		}
+	}
+	
+	//댓글 수정
+	function commentEdit(comment_no) {
+		var editedComment=$("#editInput_"+comment_no).val();
+		//console.log(comment_no, "수정 :", editedComment);
+		var jsondata = {
+				"commentNo" : comment_no,
+				"editedComment" : editedComment
+		};
+		$.ajax({
+			type : "put",//put일 때 컨트롤러에서 데이터를 못 받음
+			url : "${contextPath}/review/comment/"+comment_no,
+			data : JSON.stringify(jsondata),
+			contentType:'application/json;charset=UTF-8',
+			dataType: "text",
+			//async: false,
+			success : function(data, status, xhr) {
+				console.log("PUT success");
+				$("#editDiv_"+comment_no).css("display","none");//닫음
+				$("#commentContent_"+comment_no).text(editedComment);//변경 내용 출력
+			},
+			error : function(xhr, status, error) {
+				console.log(error);
+			}
+		});//end ajax
+	}
+	
+	//댓글 삭제
+	function commentDelete(comment_no) {
+		$("#deleteBtn").trigger("click");
+		$("#deleteMesg").text("댓글을 삭제하시겠습니까?");
+		$("#okayDelete").click(function() {
+			//console.log(comment_no, "댓글 삭제");
+			$.ajax({
+				type : "delete",
+				url : "${contextPath}/review/comment/"+comment_no,
+				//data : {},
+				dataType: "text",
+				//async: false,
+				success : function(data, status, xhr) {
+					console.log("DELETE success");
+					//댓글 div 제거
+					$("#comment_"+comment_no).remove();
+					//modal close
+					$("#deleteModal").modal("hide");
+				},
+				error : function(xhr, status, error) {
+					console.log(error);
+				}
+			});//end ajax
+		});//end delete comment
+	}
 </script>

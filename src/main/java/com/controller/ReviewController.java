@@ -12,6 +12,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.dto.Category2DTO;
 import com.dto.CategoryDTO;
+import com.dto.CommentDTO;
 import com.dto.PageDTO;
 import com.dto.ShopDTO;
 import com.dto.ShopImgDTO;
@@ -133,6 +135,62 @@ public class ReviewController {
 			e.getMessage();
 		}
 		return "redirect:/shop/"+shopNo;
+	}
+	
+	//후기 댓글 등록
+	@RequestMapping(value = "/review/{reviewNo}/comment", method = RequestMethod.POST)
+	@ResponseBody
+	public void insertComment(@RequestParam Map<String, String> map) {
+		System.out.println("insertComment===="+map);
+		int num=service.insertComment(map);
+		System.out.println(num+"개 댓글 등록 완료");
+	}
+	
+	//후기 댓글 출력
+/*	@RequestMapping(value = "/review/{reviewNo}/comment", method = RequestMethod.GET)
+	@ResponseBody
+	public List<CommentDTO> comment(@PathVariable("reviewNo") int reviewNo) {
+		System.out.println("comment===="+reviewNo);
+		List<CommentDTO> commentList=service.selectComments(reviewNo);
+		for (CommentDTO commentDTO : commentList) {
+			System.out.println("후기의 댓글 : "+commentDTO);
+		}
+		
+		return commentList;
+	}	*/
+	@RequestMapping(value = "/review/{reviewNo}/comment", method = RequestMethod.GET)
+	@ResponseBody
+	public ModelAndView comment(@RequestParam Map<String, String> map) {
+		System.out.println("comment===="+map.get("reviewNo")+"의 마지막 댓글 번호 : "+map.get("lastNo"));
+		System.out.println("후기 작성자 :"+map.get("reviewWriter"));
+		
+		List<CommentDTO> commentList=service.selectComments(map);
+		for (CommentDTO commentDTO : commentList) {
+			System.out.println("후기의 댓글 : "+commentDTO);
+		}
+		
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("commentList", commentList);
+		mav.addObject("reviewWriter", map.get("reviewWriter"));
+		mav.setViewName("comment");
+		
+		return mav;
+	}
+	
+	//후기 댓글 삭제
+	@RequestMapping(value = "/review/comment/{commentNo}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteComment(@PathVariable("commentNo") int commentNo) {
+		System.out.println("====deleteComment : "+commentNo);
+		service.deleteComment(commentNo);
+	}
+	
+	//후기 댓글 수정
+	@RequestMapping(value = "/review/comment/{commentNo}", method = RequestMethod.PUT)
+	@ResponseBody
+	public void updateComment(@RequestBody Map<String, String> map) {
+		System.out.println("====updateComment : "+map);
+		service.updateComment(map);
 	}
 	
 }

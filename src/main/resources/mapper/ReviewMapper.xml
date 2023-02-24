@@ -10,12 +10,10 @@
 			shop_img_rank, shop_img_route,
 			c.category_name, c.category_rank,
 			c2.category2_name, c2.category2_rank
-		from shop s join shop_img i
-				on s.shop_no = i.shop_no
-			join category c
-				on s.category_no = c.category_no
-			join category2 c2
-				on s.category2_no = c2.category2_no
+		from shop s
+		join shop_img i on s.shop_no = i.shop_no
+		join category c on s.category_no = c.category_no
+		join category2 c2 on s.category2_no = c2.category2_no
 		<where>
 			shop_img_rank = 1<!-- 가게 이미지 1개만 출력 -->
 			<if test="categoryNo != null and !categoryNo.equals('')">
@@ -60,11 +58,41 @@
 	<!-- 가게 후기 목록 -->
 	<select id="selectShopReviews" resultType="ReviewDTO">
 		select r.review_no, r.id, shop_no, rate, review_content, review_created, i.review_img_route, member_name
-		from review r LEFT OUTER JOIN review_img i
-				ON r.review_no = i.review_no
-			join member m
-				on r.id = m.id
+		from review r
+		LEFT OUTER JOIN review_img i ON r.review_no = i.review_no
+		join member m on r.id = m.id
 		where shop_no = #{shopNo}
 		order by r.review_no desc
 	</select>
+	
+	<!-- 후기 댓글 등록 -->
+	<insert id="insertComment" parameterType="hashMap">
+		insert into review_comment (review_no, id, comment_content, comment_created, comment_no)
+		values (#{reviewNo}, #{id}, #{comment}, sysdate, COMMENT_SEQ.nextval)
+	</insert>
+	
+	<!-- 후기의 댓글 목록 -->
+	<select id="selectComments" parameterType="hashMap" resultType="CommentDTO">
+		select review_no, r.id, comment_content, comment_created, comment_no, member_name
+		from review_comment r
+		join member m on r.id = m.id
+		where review_no = #{reviewNo}
+		<if test="lastNo != null">
+			and comment_no > #{lastNo}
+		</if>
+		order by comment_no
+	</select>
+	
+	<!-- 후기 댓글 삭제 -->
+	<delete id="deleteComment">
+		delete from review_comment
+		where comment_no = #{commentNo}
+	</delete>
+	
+	<!-- 후기 댓글 수정 -->
+	<update id="updateComment" parameterType="hashMap">
+		update review_comment
+		set comment_content = #{editedComment}
+		where comment_no = #{commentNo}
+	</update>
 </mapper>

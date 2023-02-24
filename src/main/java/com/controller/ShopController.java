@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dto.Category2DTO;
 import com.dto.CategoryDTO;
+import com.dto.CommentDTO;
 import com.dto.ReviewDTO;
 import com.dto.ShopDTO;
 import com.dto.ShopImgDTO;

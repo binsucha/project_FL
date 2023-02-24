@@ -23,7 +23,6 @@
 	<insert id="insertShop" parameterType="hashMap">
 		insert into shop (shop_no, shop_name, category_no, category2_no, shop_location, shop_contact, shop_info, average_rate, shop_created, shop_hits)
 		values (SHOP_SEQ.nextval, #{shopName}, #{category}, #{category2}, #{shopLocation}, #{shopContact}, #{shopInfo}, 0, sysdate, 0)
-
 	</insert>
 	
 	<!-- 가게 번호 가져오기 -->
@@ -49,7 +48,7 @@
 	<!-- 가게 상세 페이지 -->
 	<select id="selectShop" resultType="ShopDTO">
 		select s.shop_no, shop_name, s.category_no, s.category2_no, shop_location,
-			shop_contact, shop_info, average_rate, shop_created, shop_hits,
+			shop_contact, shop_info, round(avg(r.rate),1) average_rate, shop_created, shop_hits,
 			shop_img_rank, shop_img_route,
 			c.category_name, c.category_rank,
 			c2.category2_name, c2.category2_rank
@@ -59,8 +58,15 @@
 				on s.category_no = c.category_no
 			join category2 c2
 				on s.category2_no = c2.category2_no
+			left outer join review r
+                on s.shop_no = r.shop_no
 		where s.shop_no = #{shopNo}
 		and shop_img_rank = 1
+		group by s.shop_no, shop_name, s.category_no, s.category2_no, shop_location,
+			shop_contact, shop_info, shop_created, shop_hits,
+			shop_img_rank, shop_img_route,
+			c.category_name, c.category_rank,
+			c2.category2_name, c2.category2_rank
 	</select>
 	
 </mapper>
