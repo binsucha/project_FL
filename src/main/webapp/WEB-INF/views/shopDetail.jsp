@@ -42,6 +42,58 @@
 <button type="button" id="modalBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal" style="display: none;">modal</button>
 <!-- end modal -->
 <!-- modal -->
+<div class="modal" id="editModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Foodie League</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <form id="updateForm" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="updateRating" value="">
+		<input type="hidden" name="oldImgFile" value="">
+		<div id="editContent" class="accordion-collapse" aria-labelledby="heading">
+		  <div class="accordion-body">
+		    <div class="star-rating row">
+			  <div class="update-stars col-md-5">
+				<i class="fa fa-star fa-lg"></i>
+				<i class="fa fa-star fa-lg"></i>
+				<i class="fa fa-star fa-lg"></i>
+				<i class="fa fa-star fa-lg"></i>
+				<i class="fa fa-star fa-lg"></i>
+			  </div>
+			  <div class="update-text col-md-5 text-muted">
+			    <h6>별점을 선택해주세요.</h6>
+			  </div>
+			</div>
+			<textarea rows="5" name="updateContent" id="editTextarea"></textarea><br>
+			<div class="row">
+			  <div class="col-md-8">
+				<label for="updateImgFile" class="form-label" style="float: left;">새로운 이미지 첨부</label>
+				<input class="form-control" type="file" id="updateImgFile" name="updateImgFile" accept="image/*" multiple>
+			  </div>
+			  <div class="col-md-4">
+			    <a class="card-link" id="deleteOldImg">기존 이미지 삭제</a>
+			    <label for="deleteOldImg" class="form-label" style="float: right; display: none;"></label>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="okayEdit">수정</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button type="button" id="editBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" style="display: none;">modal</button>
+<!-- end modal -->
+<!-- modal -->
 <div class="modal" id="deleteModal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -130,6 +131,120 @@ public class ReviewController {
 				
 				//이미지 없는 후기 데이터 저장
 				service.insertReview(map);
+			}
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		return "redirect:/shop/"+shopNo;
+	}
+	
+	//가게 후기 삭제
+	@RequestMapping(value = "/review/{shopNo}/{reviewNo}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public double deleteReview(@PathVariable("shopNo") int shopNo, @PathVariable("reviewNo") int reviewNo) {
+		System.out.println("deleteReview===="+shopNo+"\t"+reviewNo);
+		
+		//후기의 이미지 데이터 select
+		String reviewImg=service.selectReviewImg(reviewNo);
+		System.out.println("리뷰 이미지 select : "+reviewImg);
+		
+		if (reviewImg!=null) {//리뷰에 이미지가 있으면
+			deleteReviewImg(reviewImg);
+		}
+		
+		//후기 삭제
+		service.deleteReview(reviewNo);
+		//삭제 후 가게 평점 select
+		double rating=shopService.selectRating(shopNo);
+		System.out.println(shopNo+"번 가게의 평점 : "+rating);
+		
+		return rating;
+	}
+	
+	//리뷰 폴더 이미지 삭제
+	private void deleteReviewImg(String reviewImg) {
+		//서버에서 이미지 삭제
+		//파일 경로 지정
+		String filePath="C://eclipse//spring_project_FL//workspace//FoodieLeague//src//main//webapp//resources//review";
+		//경로와 이름 추가한 파일 객체를 만듦
+		File file=new File(filePath+"\\"+reviewImg);
+		if(file.exists()) {//파일이 존재하면
+			System.out.println("파일 존재====");
+			file.delete();//파일 삭제
+			System.out.println("삭제 완료====");
+		}
+	}
+	
+	//가게 후기 수정
+	@RequestMapping(value = "/review/{shopNo}/{reviewNo}", method = RequestMethod.POST)
+	public String updateReview(@PathVariable("shopNo") int shopNo, @PathVariable("reviewNo") int reviewNo,
+			@RequestParam Map<String, Object> map,
+			@RequestParam("updateImgFile") MultipartFile uploadFile) {
+		System.out.println("updateReview===="+reviewNo+"\t"+map+"\t"+uploadFile);
+		map.put("reviewNo", reviewNo);
+		
+		//기존 파일명//없으면 공백
+		String oldFileName=(String) map.get("oldImgFile");
+		System.out.println("기존 파일명 : "+oldFileName);
+		
+		//업로드 파일 저장 location
+		String location = "C://eclipse//spring_project_FL//workspace//FoodieLeague//src//main//webapp//resources//review";
+		try {
+			//업로드 한 파일명//업로드 안 하면 이름 공백
+			String fileName=uploadFile.getOriginalFilename();
+			System.out.println("업로드 파일명 : "+fileName);
+			
+			if (!fileName.equals("")) {//업로드 이미지가 있으면 map에 put && 파일 업로드
+				//파일의 확장자 추출
+				String ext=fileName.substring(fileName.indexOf("."));
+				System.out.println("파일 확장자 : "+ext);
+				
+				//reName 규칙 설정
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+				int rdv=(int)(Math.random()*1000);
+				String reName=sdf.format(System.currentTimeMillis())+"_"+rdv+ext;
+				System.out.println("파일 reName : "+reName);
+				
+				//파일명 저장
+				map.put("reviewImgRoute", reName);
+				System.out.println("이미지 있는 map : "+map);
+				
+				//후기 수정
+				service.updateReview(map);
+				if (oldFileName.equals("")) {
+					System.out.println("기존 이미지 X, 업로드 이미지 O : 이미지 추가");
+					//후기 이미지 추가
+					service.insertReviewImg(map);
+				} else {
+					System.out.println("기존 이미지 O, 업로드 이미지 O : 이미지 수정");
+					//기존 이미지 삭제
+					deleteReviewImg(oldFileName);
+					//후기 이미지 수정
+					service.updateReviewImg(map);
+				}
+				
+				//파일 업로드
+				File destination=new File(location+File.separator+reName);
+				uploadFile.transferTo(destination);
+			} else if (oldFileName.equals("") && fileName.equals("")) {
+				System.out.println("기존 이미지 X, 업로드 이미지 X : 이미지 삭제");
+				//후기 수정
+				service.updateReview(map);
+				
+				//후기의 이미지 데이터 select
+				String reviewImg=service.selectReviewImg(reviewNo);//기존 이미지 없으면 null
+				System.out.println("리뷰 이미지 select : "+reviewImg);
+				if (reviewImg!=null) {
+					System.out.println("기존 이미지 있음---삭제하기");
+					//후기 이미지 삭제
+					service.deleteReviewImg(reviewNo);
+					//이미지 파일 삭제
+					deleteReviewImg(reviewImg);
+				}
+			} else {
+				System.out.println("기존 이미지 O, 업로드 이미지 X : 기존 이미지 유지");
+				//후기 수정
+				service.updateReview(map);
 			}
 		} catch (Exception e) {
 			e.getMessage();

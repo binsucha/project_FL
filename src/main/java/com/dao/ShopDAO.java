@@ -58,5 +58,10 @@ public class ShopDAO {
 	public ShopDTO selectShop(int shopNo) {
 		return session.selectOne("ShopMapper.selectShop", shopNo);
 	}
+
+	//가게 평점 출력
+	public double selectRating(int shopNo) {
+		return session.selectOne("ShopMapper.selectRating", shopNo);
+	}
 	
 }

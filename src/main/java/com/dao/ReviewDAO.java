@@ -77,5 +77,33 @@ public class ReviewDAO {
 		int num=session.update("ReviewMapper.updateComment", map);
 		System.out.println(num+"개 댓글 수정 완료");
 	}
-	
+
+	//가게 후기 삭제
+	public void deleteReview(int reviewNo) {
+		int num=session.delete("ReviewMapper.deleteReview", reviewNo);
+		System.out.println(num+"개 후기 삭제 완료");
+	}
+
+	//후기 이미지 select
+	public String selectReviewImg(int reviewNo) {
+		return session.selectOne("ReviewMapper.selectReviewImg", reviewNo);
+	}
+
+	//후기 수정
+	public void updateReview(Map<String, Object> map) {
+		int num=session.update("ReviewMapper.updateReview", map);
+		System.out.println(num+"개 후기 수정 완료");
+	}
+	public void insertReviewImg(Map<String, Object> map) {
+		int num=session.insert("ReviewMapper.insertReviewImg", map);
+		System.out.println(num+"개 후기 이미지 추가 완료");
+	}
+	public void updateReviewImg(Map<String, Object> map) {
+		int num=session.update("ReviewMapper.updateReviewImg", map);
+		System.out.println(num+"개 후기 이미지 업데이트 완료");
+	}
+	public void deleteReviewImg(int reviewNo) {
+		int num=session.delete("ReviewMapper.deleteReviewImg", reviewNo);
+		System.out.println(num+"개 후기 이미지 삭제 완료");
+	}
 }

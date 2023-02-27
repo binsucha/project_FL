@@ -69,4 +69,19 @@
 			c2.category2_name, c2.category2_rank
 	</select>
 	
+	<!-- 가게 평점 출력 -->
+	<select id="selectRating" resultType="double">
+<!-- 	select round(avg(rate),1) from review
+		where shop_no = #{shopNo} -->
+		select nvl(round(avg(rate),1), 0) as rate
+		from (select rate
+		        from review
+		        where shop_no = #{shopNo}
+		        
+		        union all
+		        
+		        select null as rate
+		        from dual)
+		where rate is not null or rownum = 1
+	</select>
 </mapper>

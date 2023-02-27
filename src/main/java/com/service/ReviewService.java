@@ -52,5 +52,29 @@ public class ReviewService {
 	public void updateComment(Map<String, String> map) {
 		dao.updateComment(map);
 	}
+
+	//가게 후기 삭제
+	public void deleteReview(int reviewNo) {
+		dao.deleteReview(reviewNo);
+	}
+
+	//후기 이미지 select
+	public String selectReviewImg(int reviewNo) {
+		return dao.selectReviewImg(reviewNo);
+	}
+
+	//후기 수정
+	public void updateReview(Map<String, Object> map) {
+		dao.updateReview(map);
+	}
+	public void insertReviewImg(Map<String, Object> map) {
+		dao.insertReviewImg(map);
+	}
+	public void updateReviewImg(Map<String, Object> map) {
+		dao.updateReviewImg(map);
+	}
+	public void deleteReviewImg(int reviewNo) {
+		dao.deleteReviewImg(reviewNo);
+	}
 	
 }

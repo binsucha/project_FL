@@ -60,4 +60,9 @@ public class ShopService {
 		return dao.selectShop(shopNo);
 	}
 
+	//가게 평점 출력
+	public double selectRating(int shopNo) {
+		return dao.selectRating(shopNo);
+	}
+
 }

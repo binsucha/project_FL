@@ -5,7 +5,7 @@
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}"></c:set>
 <style>
-	.container {
+	.container, .modal {
 		cursor: default;
 	}
 	#scrap {
@@ -24,6 +24,10 @@
 		cursor: pointer;
 	}
 	.stars .fa.active {
+	    color: #EB6864;
+	    text-shadow: 0 0 5px #EB6864;
+	}
+	.update-stars .fa.active {
 	    color: #EB6864;
 	    text-shadow: 0 0 5px #EB6864;
 	}
@@ -69,6 +73,15 @@
 	}
 	.commentInput, .editInput {
 		font-size: 14;
+	}
+	.reviewEdit, .reviewDelete {
+		color: #EB6864;
+		font-size: 14;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	#deleteOldImg {
+		font-size: 15;
 	}
 </style>
 
@@ -131,13 +144,19 @@
 		<div class="col-md-6">
 			<div class="card border-primary mb-3">
 			  <div class="card-body">
-			    <h4 class="card-title" style="display: inline;">평점 : ${shop.average_rate}</h4>
+			    <h4 class="card-title shopRating" style="display: inline;">평점 : ${shop.average_rate}</h4>
 			    <c:set value="${shop.average_rate}" var="average_rate"/>
 				<c:set value="${average_rate+((average_rate%1>0.5)?(1-(average_rate%1))%1:-(average_rate%1))}" var="rating"/><!-- 평점 반올림 -->
-				<img src="${contextPath}/resources/image/rating${rating.intValue()}.png" height="30px" style="float: right;">
+				<img class="ratingImg" src="${contextPath}/resources/image/rating${rating.intValue()}.png" height="30px" style="float: right;">
+<%-- 			<span class="rating" style="position: absolute; display: inline-block; overflow: hidden;">
+					<img src="${contextPath}/resources/image/rating0.png" height="30px">
+				</span>
+				<span style="position: absolute; display: inline-block; overflow: hidden;">
+					<img src="${contextPath}/resources/image/rating5.png" height="30px">
+				</span> --%>
 			  </div>
 			</div>
-			<form action="${contextPath}/review/${shop.shop_no}" method="post" enctype="multipart/form-data">
+			<form id="insertForm" action="${contextPath}/review/${shop.shop_no}" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="id" value="${login.id}">
 			<input type="hidden" name="rating" value="">
 				<div class="accordion" id="reviewForm">
@@ -178,9 +197,13 @@
 			</form>
 			<div>
 			<c:forEach items="${reviewList}" var="review">
-				<div class="card border-primary mb-3" style="max-width: 40rem;">
+				<div class="card border-primary mb-3 reviewList_${review.review_no}" style="max-width: 40rem;">
 				  <div class="card-header">
 				  	<span style="font-size: 17;">${review.member_name}</span>
+				  	<c:if test="${login.id eq review.id}">
+				  		<span class="reviewEdit" onClick="reviewEdit(${review.review_no}, ${review.rate}, '${review.review_content}', '${review.review_img_route}')">수정</span>
+				  		<span class="reviewDelete" onClick="reviewDelete(${review.review_no})">삭제</span>
+				  	</c:if>
 				  	<img src="${contextPath}/resources/image/rating${review.rate.intValue()}.png" height="20px" style="float: right;">
 				  </div>
 				  <div class="card-body">
@@ -271,13 +294,13 @@
 			//후기 아코디언 열리지 않도록
 			$("#reviewFormBtn").attr("data-bs-toggle","");
 			$("#reviewFormBtn").click(function() {
-				checkLogin(mesg);
+				showMesg(mesg);
 			});
 			
 			//후기의 댓글창 readonly
 			$("input[name=comment]").attr("readonly", "readonly");
 			$("input[name=comment]").click(function() {
-				checkLogin(mesg);
+				showMesg(mesg);
 			});
 		}
 		
@@ -290,12 +313,13 @@
 			console.log(starRate, content);
 			
 			if (starRate=="") {
-				console.log("별점 선택 안 함");
+				showMesg("별점을 선택해주세요.");
 			} else if (content=="") {
-				console.log("내용 입력 안 함");
+				showMesg("내용을 입력해주세요.");
 			} else {
 				console.log("공백 검사 완료");
-				$("form").submit();//////////
+				//$("form").submit();//////////
+				$("#insertForm").submit();
 			}
 		});//end 후기 등록
 		
@@ -329,7 +353,7 @@
 			var comment=$("#commentInput_"+reviewNo).val();
 			
 			if (comment.length==0) {
-				checkLogin("내용을 입력해주세요.");
+				showMesg("내용을 입력해주세요.");
 			} else {
 				//console.log(reviewNo, comment);
 				$.ajax({
@@ -358,11 +382,151 @@
 				console.log("중복 클릭 off");
 			});//end fn
 		});
+		$("#editModal").on("hidden.bs.modal", function () {
+			$("#okayEdit").off("click").on("click", function() {
+				console.log("중복 클릭 off");
+			});//end fn
+		});
+		
+		//수정 modal 닫으면 입력 값 reset
+		$("#editModal").on("hidden.bs.modal", function () {
+			console.log("모달 close");
+			//설정 데이터 삭제
+			//별점 데이터 삭제//불필요함---공백인 경우가 없어서 항상 열 때마다 업데이트 됨
+			//$("input[name=updateRating]").val("");
+			//별점 표시 삭제
+			$(".update-stars .fa").removeClass("active");//class 속성 제거
+			//후기 데이터 삭제//불필요함---공백인 경우가 없어서 항상 열 때마다 업데이트 됨
+			//이미지 데이터 삭제
+			$("input[name=oldImgFile]").val("");
+			//바뀐 데이터 삭제
+			//선택한 이미지 삭제//직접 value 설정은 불가능하지만 초기화는 가능한 건가? 오류 없음
+			$("#updateImgFile").val("");
+			//기존 이미지 삭제 메세지 숨김
+			$("#deleteOldImg").next("label").css("display","none");
+		});
+		
+		//기존 이미지 데이터 삭제
+		$("#deleteOldImg").click(function() {
+			var oldImg=$("input[name=oldImgFile]").val();
+			if (oldImg.length==0) {//oldImg 없음
+				$(this).next("label").text("이미지가 없습니다.");
+				$(this).next("label").css("display","");
+			} else {
+				$("input[name=oldImgFile]").val("");
+				$(this).next("label").text("삭제되었습니다.");
+				$(this).next("label").css("display","");
+			}
+		});//end
 	});//end ready
 	
-	function checkLogin(mesg) {
+	function showMesg(mesg) {
 		$("#modalBtn").trigger("click");
 		$("#modalMesg").text(mesg);
+	}
+	
+	//후기 삭제
+	function reviewDelete(reviewNo) {
+		$("#deleteBtn").trigger("click");
+		$("#deleteMesg").text("후기를 삭제하시겠습니까?");
+		$("#okayDelete").click(function() {
+			console.log(reviewNo, "후기 삭제");
+			$.ajax({
+				type : "delete",
+				url : "${contextPath}/review/${shop.shop_no}/"+reviewNo,
+				dataType: "text",
+				success : function(data, status, xhr) {
+					console.log("DELETE success");
+					var update="평점 : "+data;
+					var num=Math.round(data);
+					console.log(update, num);
+					
+					//update 평점 출력
+					$(".card-title.shopRating").text(update);
+					
+					//update 평점 이미지 변경/////이후에 평점 % 표시할 때 같이 수정
+					$(".ratingImg").attr("src","${contextPath}/resources/image/rating"+num+".png");
+					
+					//후기 div 제거
+					$(".reviewList_"+reviewNo).remove();
+					
+					//modal close
+					$("#deleteModal").modal("hide");
+					showMesg("후기가 삭제되었습니다.");
+					
+					//modal 닫힌 후 페이지 새로고침
+/*					$("#modal").on("hidden.bs.modal", function () {
+						//새로고침
+						location.reload();
+					});	*/
+				},
+				error : function(xhr, status, error) {
+					console.log(error);
+				}
+			});//end ajax
+		});//end delete review
+	}
+	
+	//후기 수정
+	function reviewEdit(reviewNo, rating, content, imgRoute) {
+		console.log(reviewNo, "후기 수정", rating, content, imgRoute);
+		$("#editBtn").trigger("click");
+		var idx=rating-1;
+		console.log("별 index 번호 :", idx);
+		
+		//기존 데이터 출력
+		//별점 데이터
+		$("input[name=updateRating]").val(rating);
+		//별점 표시
+		//console.log($(".update-stars .fa").eq(idx));//idx번째 요소 선택
+		$(".update-stars .fa").eq(idx).addClass("active");//class 속성 추가//해당 class 선택 후 스타일 설정
+		$(".update-stars .fa").eq(idx).prevAll().addClass("active");//class 속성 추가//해당 class 선택 후 스타일 설정
+		//수정 modal에 기존 후기 데이터 출력
+		$("#editTextarea").val(content);//text(content)로 하면 제대로 출력이 안되고 마지막 입력한 데이터가 남아있는 문제,,,
+		//이미지 데이터
+		//$("input[name=updateImgFile]").val(imgRoute);//type file에 직접 value 설정이 불가능함
+		$("input[name=oldImgFile]").val(imgRoute);//hidden value로 넘길 기존 이미지 데이터
+		
+		//별점 선택
+		$(".update-stars .fa").click(function() {
+			$(this).addClass("active");//class 속성 추가//해당 class 선택 후 스타일 설정
+
+			//클릭한 별을 기준으로 (.fa) 그 이전 별은 보이게 그 뒤에 별들은 안보이게
+			$(this).prevAll().addClass("active");
+			$(this).nextAll().removeClass("active");
+			
+			//순서를 찾는 메서드 index 0 1 2 3 4
+			//텍스트내용을 출력 text, 태그+텍스트 html
+			var num=$(this).index();
+			console.log("선택한 update 별점 :", num);
+			var starRate=num+1;
+			$("input[name=updateRating]").val(starRate);
+			
+		    if(starRate==1) {
+		        $(".update-text").html("<h6>별로예요 😢</h6>");
+		    } else if(starRate==2) {
+		        $(".update-text").html("<h6>아쉬워요 🙁</h6>");
+		    } else if(starRate==3) {
+		        $(".update-text").html("<h6>괜찮아요 🙂</h6>");
+		    } else if(starRate==4) {
+		        $(".update-text").html("<h6>만족해요 😊</h6>");
+		    } else {
+		        $(".update-text").html("<h6>아주 좋아요 😍</h6>");
+		    }
+		});//end 별점 선택
+		
+		//후기 내용 공백 검사 후 form submit
+		$("#okayEdit").click(function() {
+			var updateContent=$("#editTextarea").val();
+			console.log(updateContent, updateContent.length);
+			if (updateContent.length==0) {//textArea의 text가 아닌 val로 확인
+				showMesg("내용을 입력해주세요.");
+			} else {
+				console.log("form submit=====");
+				$("#updateForm").attr("action","${contextPath}/review/${shop.shop_no}/"+reviewNo);
+				$("#updateForm").submit();
+			}
+		});//end submit
 	}
 	
 	//댓글 목록 출력
@@ -458,6 +622,7 @@
 					$("#comment_"+comment_no).remove();
 					//modal close
 					$("#deleteModal").modal("hide");
+					showMesg("댓글이 삭제되었습니다.");
 				},
 				error : function(xhr, status, error) {
 					console.log(error);

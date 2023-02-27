@@ -95,4 +95,42 @@
 		set comment_content = #{editedComment}
 		where comment_no = #{commentNo}
 	</update>
+	
+	<!-- 가게 후기 삭제 -->
+	<delete id="deleteReview">
+		delete from review
+		where review_no = #{reviewNo}
+	</delete>
+	
+	<!-- 후기 이미지 select -->
+	<select id="selectReviewImg" resultType="String">
+		select review_img_route from review_img
+		where review_no = #{reviewNo}
+	</select>
+	
+	<!-- 후기 수정 -->
+	<update id="updateReview" parameterType="hashMap">
+		update review
+		set rate = #{updateRating}, review_content = #{updateContent}
+		where review_no = #{reviewNo}
+	</update>
+	
+	<!-- 후기 이미지 추가 -->
+	<insert id="insertReviewImg" parameterType="hashMap">
+		insert into review_img (review_no, review_img_route)
+		values (#{reviewNo}, #{reviewImgRoute})
+	</insert>
+	
+	<!-- 후기 이미지 수정 -->
+	<update id="updateReviewImg" parameterType="hashMap">
+		update review_img
+		set review_img_route = #{reviewImgRoute}
+		where review_no = #{reviewNo}
+	</update>
+	
+	<!-- 후기 이미지 삭제 -->
+	<delete id="deleteReviewImg">
+		delete from review_img
+		where review_no = #{reviewNo}
+	</delete>
 </mapper>
