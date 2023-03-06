@@ -84,4 +84,16 @@
 		        from dual)
 		where rate is not null or rownum = 1
 	</select>
+	
+	<!-- 가게 이미지 삭제 -->
+	<delete id="deleteShopImg">
+		delete from shop_img
+		where shop_no = #{shopNo}
+	</delete>
+	
+	<!-- 가게 삭제 -->
+	<delete id="deleteShop">
+		delete from shop
+		where shop_no = #{shopNo}
+	</delete>
 </mapper>

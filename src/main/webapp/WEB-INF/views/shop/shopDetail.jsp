@@ -99,7 +99,7 @@
 				  <div class="col-md" style="text-align: center;">
 				  	<c:forEach items="${imgList}" var="img" varStatus="status" end="0"><!-- 한 번만 출력 -->
 				  	<c:if test="${status.index==0}"><!-- 첫 번째 이미지만 출력 -->
-						<img src="${contextPath}/resources/upload/${img.shop_img_route}" width="360px" height="360px"
+						<img src="${contextPath}/resources/shop/${img.shop_img_route}" width="360px" height="360px"
 							class="first-img" data-img="${img.shop_img_route}" style="border-radius: 1.5em; margin-bottom: 5;">
 				  	</c:if>
 				  	</c:forEach>
@@ -108,7 +108,7 @@
 				  	<c:set value="1" var="imgBegin"></c:set>
 				  	<c:set value="${fn:length(imgList)}" var="imgLength"></c:set>
 				  	<c:forEach items="${imgList}" var="img" varStatus="status" begin="${imgBegin}" end="4"><!-- 두 번째 이미지부터 4개 출력 -->
-						<img src="${contextPath}/resources/upload/${img.shop_img_route}" width="90px" height="90px"
+						<img src="${contextPath}/resources/shop/${img.shop_img_route}" width="90px" height="90px"
 							style="border-radius: 0.5em; margin-bottom: 5;" class="the-others" data-img="${img.shop_img_route}">
 				  	</c:forEach>
 				  	<c:if test="${imgLength>5}">
@@ -246,18 +246,18 @@
 	$(document).ready(function() {
 		//(관리자) 수정하기 버튼
 		$("#change").click(function() {
-			//location.href="${contextPath}/shop/${shop.shop_no}/admin";
+			location.href="${contextPath}/shop/${shop.shop_no}/admin";
 		});//end 수정하기 버튼
 		
 		//이미지 변경
 		$(".the-others").mouseover(function() {
 			var changedImg=$(this).attr("data-img");
-			$(".first-img").attr("src","${contextPath}/resources/upload/"+changedImg);
+			$(".first-img").attr("src","${contextPath}/resources/shop/"+changedImg);
 		});//end 이미지 변경
 		
 		$(".the-others").mouseout(function() {
 			var firstImg=$(".first-img").attr("data-img");
-			$(".first-img").attr("src","${contextPath}/resources/upload/"+firstImg);
+			$(".first-img").attr("src","${contextPath}/resources/shop/"+firstImg);
 		});//end 이미지 변경
 		
 		//별점 선택

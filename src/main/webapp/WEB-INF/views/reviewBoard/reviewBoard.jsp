@@ -88,7 +88,7 @@
 			    <%-- <p class="card-text">${list.shop_info}</p> --%>
 			    	<img src="${contextPath}/resources/image/left.png" name="prev" width="20px" height="20px">
 			    	<a href="${contextPath}/shop/${list.shop_no}" class="card-link" style="text-decoration: none;">
-			    		<img src="${contextPath}/resources/upload/${list.shop_img_route}" style="margin: 20 10 10 10"
+			    		<img src="${contextPath}/resources/shop/${list.shop_img_route}" style="margin: 20 10 10 10"
 			    			id="img_${list.shop_no}" data-no="${list.shop_no}" data-rank="${list.shop_img_rank}" width="250px" height="250px">
 			    	</a>
 			    	<img src="${contextPath}/resources/image/right.png" name="next" width="20px" height="20px">
@@ -204,7 +204,7 @@
 								console.log("다음 이미지 rank :", nextRank, " route :", nextImg);
 								
 								//이미지 데이터 변경
-								$("#img_"+imgShopNo).attr("src","${contextPath}/resources/upload/"+nextImg);
+								$("#img_"+imgShopNo).attr("src","${contextPath}/resources/shop/"+nextImg);
 								$("#img_"+imgShopNo).attr("data-rank",nextRank);
 							} else {//마지막 데이터
 								console.log("마지막");
@@ -246,7 +246,7 @@
 								console.log("이전 이미지 rank :", prevRank, " route :", prevImg);
 								
 								//이미지 데이터 변경
-								$("#img_"+imgShopNo).attr("src","${contextPath}/resources/upload/"+prevImg);
+								$("#img_"+imgShopNo).attr("src","${contextPath}/resources/shop/"+prevImg);
 								$("#img_"+imgShopNo).attr("data-rank",prevRank);
 							} else {//마지막 데이터
 								console.log("첫번째");

@@ -65,4 +65,14 @@ public class ShopService {
 		return dao.selectRating(shopNo);
 	}
 
+	//가게 삭제
+	public void deleteShop(int shopNo) {
+		dao.deleteShop(shopNo);
+	}
+
+	//가게 이미지 삭제
+	public void deleteShopImg(String shopNo) {
+		dao.deleteShopImg(shopNo);
+	}
+
 }

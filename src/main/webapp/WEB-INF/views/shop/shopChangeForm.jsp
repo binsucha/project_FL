@@ -28,15 +28,35 @@
 		width: 60%;
 	}
 	textarea {
-		height: 28%;
+		height: 14%;
 		resize: none;
+	}
+	.img {
+		cursor: pointer;
+		position: absolute; z-index: 2;
+		top: 5%; left: 5%;
+	}
+	figcaption {
+		position: absolute;/* 이미지 위에 출력 */
+		top: 0%; left: 0%;/* 위치 설정 */
+		
+		width: 121px; height: 121px;/* 크기 설정 */
+		background-color: rgba(0,0,0,0.5);/* 배경 검정색으로 */
+		border-radius: 9px;
+		
+		color: #fff; text-align: center;/* 글자 색상, 위치 설정 */
+		line-height: 120px;/* 글자 상하 위치 설정 */
+		font-weight: bold;
+		font-size: 13px;
+		
+		opacity: 0;/* 처음에 보이지 않도록 */
 	}
 </style>
 
-<form method="post" enctype="multipart/form-data">
+<form action="${contextPath}/shop/${shop.shop_no}/admin" method="post" enctype="multipart/form-data">
 <div class="container">
   <fieldset>
-    <legend>가게 등록</legend>
+    <legend>가게 수정</legend>
     <div class="row" tabindex="0">
 	    <div class="col-md-6" style="width: 30%;">
 		    <div class="form-group">
@@ -73,30 +93,37 @@
 	    <div class="col-md-6" style="width: 30%;">
 			<div class="form-group">
 		   	  <label for="shopInfo" class="form-label mt-4">가게 정보</label>
-		      <textarea class="form-control" id="shopInfo" name="shopInfo" aria-describedby="shopInfoHelp">
-		      	${shop.shop_info}
-		      </textarea>
-		    </div>
-		    <c:forEach items="${imgList}" var="imgList">
-			    <div class="form-group">
-			      <label for="imgFile" class="form-label mt-4">이미지 등록</label>
-			      <input class="form-control" type="file" id="imgFile" name="imgFile" accept="image/*" multiple
-			      	value="${imgList.shop_img_route}"><!-- value에 기존 이미지 이름이 출력되지 않음, 이미지 수정 방법 검색해보기 -->
-			    </div>
-		    </c:forEach>
-		    <!-- <div class="form-group">
-		      <label for="imgFile2" class="form-label mt-4">이미지 등록2</label>
-		      <input class="form-control" type="file" id="imgFile2" name="imgFile" accept="image/*" multiple>
+		      <textarea class="form-control" id="shopInfo" name="shopInfo" aria-describedby="shopInfoHelp">${shop.shop_info}</textarea>
 		    </div>
 		    <div class="form-group">
-		      <label for="imgFile3" class="form-label mt-4">이미지 등록3</label>
-		      <input class="form-control" type="file" id="imgFile3" name="imgFile" accept="image/*" multiple>
-		    </div> -->
+		    	<div class="col-md-12">
+		    		<label for="OldImgs" class="form-label mt-4">등록된 이미지</label>
+		    	</div>
+			    <c:forEach items="${imgList}" var="img" varStatus="status">
+			    <div class="col-md-4" style="margin-bottom: 5; position: relative; float: left;">
+				    <input type="hidden" id="OldImg_${status.index+1}" name="oldImg" value="${img.shop_img_route}">
+				    <figure>
+			    		<img src="${contextPath}/resources/shop/${img.shop_img_route}" height="120px"
+								id="OldImgs_${status.index+1}" style="border-radius: 0.5em; margin-bottom: 5; z-index: 3;">
+			    		<figcaption id="caption_${status.index+1}">삭제되었습니다.</figcaption>
+		    		</figure>
+			    	<img class="img deleteImage" data-num="${status.index+1}" src="${contextPath}/resources/image/delete.png" height="28px">
+			    	<img class="img reloadImage" data-num="${status.index+1}" src="${contextPath}/resources/image/reloading.png" height="28px" style="left: 30%;">
+		    	</div>
+			    </c:forEach>
+		    </div>
+		    <div class="form-group">
+		      <label for="imgFile" class="form-label mt-4">새로운 이미지 추가</label>
+		      <input class="form-control" type="file" id="imgFile" name="imgFile" accept="image/*" multiple>
+		    </div>
 	    </div>
-	    <div class="col-md-12" style="margin-top: 55;">
-		   	<button type="submit" class="btn btn-primary" style="float: right;">등록하기</button>
-		</div>
     </div>
+	<div class="row">
+		<div class="col-md-12" style="text-align: right; margin-top: 50;">
+			<button type="submit" class="btn btn-primary">수정하기</button>
+			<button type="button" id="deleteShop" data-no="${shop.shop_no}" class="btn btn-primary">삭제하기</button>
+		</div>
+	</div>
   </fieldset>
 </div>
 </form>
@@ -104,51 +131,79 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		//기존 이미지 삭제
+		$(".deleteImage").click(function() {
+			var num=$(this).attr("data-num");
+			$("#OldImg_"+num).attr("name","deleteImg");
+			$("#caption_"+num).css("opacity","1");
+		});//end 기존 이미지 삭제
+		
+		//기존 이미지 삭제 취소
+		$(".reloadImage").click(function() {
+			var num=$(this).attr("data-num");
+			$("#OldImg_"+num).attr("name","oldImg");
+			$("#caption_"+num).css("opacity","0");
+		});//enf 삭제 취소
+		
+		//가게 삭제
+		$("#deleteShop").click(function() {
+			var shopNo="${shop.shop_no}";
+			console.log(shopNo);
+			$("#deleteBtn").trigger("click");
+			$("#deleteMesg").text("가게를 삭제하시겠습니까?");
+			$("#okayDelete").click(function() {
+				$.ajax({
+					type : "delete",
+					url : "${contextPath}//shop/"+shopNo,
+					success : function(status, xhr) {
+						console.log("success");
+						//삭제 성공 후 후기 목록으로 페이지 이동
+						location.href="${contextPath}/reviewBoard";
+					},
+					error : function(xhr, status, error) {
+						console.log(error);
+					}
+				});//end ajax
+			});//okayDelete
+		});//end deleteShop
+		
 		$("form").submit(function() {
 			var result=dataCheck();//중복 확인 메서드 리턴 값 저장
 			console.log("result :", result);
-			if (result=="등록 가능한 가게입니다.") {
-				//데이터 공백 검사
-				if (dataCheck2()) {//공백 검사 err
-					event.preventDefault();
-				} else {//submit
-					$(this).attr("action", "${contextPath}/shop/"+$("#shopName").val());
-					//console.log($(this).attr("action"));
-	 				console.log("폼 제출");
-				}
-			} else if (result=="이미 존재하는 가게 정보입니다." || result=="다른 가게의 연락처로 등록된 번호입니다.") {
-				console.log("중복 데이터");
-				$("#modalBtn").trigger("click");
-				$("#modalMesg").text(result);
+			
+			//연락처 중복 검사
+			if (result=="다른 가게의 연락처로 등록된 번호입니다.") {
+				showMesg(result);
  				$("#modal").on("hidden.bs.modal", function () {
 					$("#shopContact").focus();
 				});
  				$("#shopContact").val("");
  				event.preventDefault();
 			} else {
-				console.log("데이터 공백");
-				event.preventDefault();
+				//데이터 공백 검사
+				if (dataCheck2()) {//공백 검사 err
+					event.preventDefault();
+				} else {
+					//submit
+				}
 			}
 		});//end submit
 	});//end ready
+
+	function showMesg(mesg) {
+		$("#modalBtn").trigger("click");
+		$("#modalMesg").text(mesg);
+	}
 	
-	//가게 이름과 연락처 중복 확인
+	//연락처만 중복 확인
 	function dataCheck() {
 		var shopName = $("#shopName").val().replace(/(\s*)/g,'');//전체 공백 제거
 		var shopContact = $("#shopContact").val().replace(/(\s*)/g,'').replace(/\-/g,'');//전체 공백 제거, 특수문자 - 제거
 		console.log("입력 된 데이터 :", shopName, shopContact);
 		var result;
 		
-		if (shopName.length==0) {
-			$("#modalBtn").trigger("click");
-			$("#modalMesg").text("가게 이름을 입력해주세요.");
-			$("#modal").on("hidden.bs.modal", function () {
-				$("#shopName").focus();
-			});
-			result=false;
-		} else if (shopContact.length==0) {
-			$("#modalBtn").trigger("click");
-			$("#modalMesg").text("가게 연락처를 입력해주세요.");
+		if (shopContact.length==0) {
+			showMesg("가게 연락처를 입력해주세요.");
 			$("#modal").on("hidden.bs.modal", function () {
 				$("#shopContact").focus();
 			});
@@ -165,11 +220,7 @@
 				},
 				success : function(data, status, xhr) {
 					//console.log("success :", data);
-					if (data=="등록 가능한 가게입니다.") {
-						result=data;
-					} else {
-						result=data;
-					}
+					result=data;
 				},
 				error : function(xhr, status, error) {
 					console.log(error);
@@ -181,34 +232,23 @@
 	}//end 중복 확인
 	
 	//이름, 연락처는 공백 안되게 설정 완료
-	//카테고리, 카테고리2, 위치 공백 확인//가게 정보랑 이미지는 선택 사항
+	//카테고리, 카테고리2는 기본적으로 selected 상태여서 null인 경우가 없음
+	//위치, 이미지 공백 확인//가게 정보는 선택 사항
 	function dataCheck2() {
 		var category=$("#category").val();
 		var category2=$("#category2").val();
 		var shopLocation=$("#shopLocation").val();
-		if (category==null) {//select option은 선택 안 하는 경우 null or value
-			console.log("카테고리");
-			$("#modalBtn").trigger("click");
-			$("#modalMesg").text("카테고리를 선택해주세요.");
-			$("#modal").on("hidden.bs.modal", function () {
-				$("#category").focus();
-			});
-			return true;
-		} else if (category2==null) {
-			console.log("카테고리2");
-			$("#modalBtn").trigger("click");
-			$("#modalMesg").text("카테고리2를 선택해주세요.");
-			$("#modal").on("hidden.bs.modal", function () {
-				$("#category2").focus();
-			});
-			return true;
-		} else if (shopLocation.length==0) {//input text는 공백 or value
-			console.log("위치");
-			$("#modalBtn").trigger("click");
-			$("#modalMesg").text("가게 위치를 입력해주세요.");
+		var oldFile=$("input[name=oldImg]").val();
+		var imgFile=$("#imgFile").val();
+		
+		if (shopLocation.length==0) {//input text는 공백 or value
+			showMesg("가게 위치를 입력해주세요.");
 			$("#modal").on("hidden.bs.modal", function () {
 				$("#shopLocation").focus();
 			});
+			return true;
+		} else if (oldFile==undefined && imgFile.length==0) {
+			showMesg("1개 이상 이미지를 등록해주세요.");
 			return true;
 		} else {
 			console.log("공백 확인 완료");

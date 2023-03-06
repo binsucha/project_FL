@@ -63,5 +63,17 @@ public class ShopDAO {
 	public double selectRating(int shopNo) {
 		return session.selectOne("ShopMapper.selectRating", shopNo);
 	}
+
+	//가게 삭제
+	public void deleteShop(int shopNo) {
+		int num=session.delete("ShopMapper.deleteShop", shopNo);
+		System.out.println(num+"개 가게 삭제 완료");
+	}
+
+	//가게 이미지 삭제
+	public void deleteShopImg(String shopNo) {
+		int num=session.delete("ShopMapper.deleteShopImg", shopNo);
+		System.out.println(num+"개 가게 이미지 삭제 완료");
+	}
 	
 }

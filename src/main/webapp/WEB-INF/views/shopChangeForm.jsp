@@ -40,6 +40,27 @@
 </div>
 <button type="button" id="modalBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal" style="display: none;">modal</button>
 <!-- end modal -->
-
+<!-- modal -->
+<div class="modal" id="deleteModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Foodie League</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <span id="deleteMesg"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="okayDelete">삭제</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button type="button" id="deleteBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" style="display: none;">modal</button>
+<!-- end modal -->
 </body>
 </html>
