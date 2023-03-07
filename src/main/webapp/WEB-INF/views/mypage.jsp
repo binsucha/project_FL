@@ -16,7 +16,8 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
-				
+				$("#modalBtn").trigger("click");
+				$("#modalMesg").text("${mesg}");
 			});
 		</script>
 	</c:if>
@@ -38,7 +39,28 @@
         </button>
       </div>
       <div class="modal-body" style="text-align: center;">
-        <p id="modalMesg"></p><br>
+        <span id="modalMesg"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button type="button" id="modalBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal" style="display: none;">modal</button>
+<!-- end modal -->
+<!-- modal -->
+<div class="modal" id="mypageModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Foodie League</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <p id="mypageModalMesg"></p><br>
         <input type="password" id="textArea"></input>
       </div>
       <div class="modal-footer">
@@ -48,8 +70,7 @@
     </div>
   </div>
 </div>
-<button type="button" id="modalBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal" style="display: none;">modal</button>
+<button type="button" id="mypageModalBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mypageModal" style="display: none;">modal</button>
 <!-- end modal -->
-
 </body>
 </html>

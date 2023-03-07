@@ -11,6 +11,7 @@ import com.dao.ReviewDAO;
 import com.dto.CommentDTO;
 import com.dto.PageDTO;
 import com.dto.ReviewDTO;
+import com.dto.ScrapDTO;
 import com.dto.ShopDTO;
 
 @Service
@@ -75,6 +76,11 @@ public class ReviewService {
 	}
 	public void deleteReviewImg(int reviewNo) {
 		dao.deleteReviewImg(reviewNo);
+	}
+
+	//스크랩 목록
+	public List<Integer> scrapList(String id) {
+		return dao.scrapList(id);
 	}
 	
 }

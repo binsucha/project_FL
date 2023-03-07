@@ -83,7 +83,7 @@
 					} else {
 						//비밀번호 오류
 						//현재 modal open 상태
-						$("#modalMesg").text("비밀번호가 틀렸습니다.");
+						$("#mypageModalMesg").text("비밀번호가 틀렸습니다.");
 						$("#textArea").val("");
 						$("#textArea").focus();
 					}
@@ -97,9 +97,9 @@
 	
 	//회원 정보 수정 클릭
  	function check() {
-		$("#modalBtn").trigger("click");
-		$("#modalMesg").text("비밀번호를 입력하세요.");
-		$("#modal").on("shown.bs.modal", function () {
+		$("#mypageModalBtn").trigger("click");
+		$("#mypageModalMesg").text("비밀번호를 입력하세요.");
+		$("#mypageModal").on("shown.bs.modal", function () {
 			$("#textArea").focus();//첫번째 오픈 시 포커스 안 됨 ㅠㅠ 두번째부터는 됨,,
 		});
 	}

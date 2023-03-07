@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.dto.Category2DTO;
 import com.dto.CategoryDTO;
 import com.dto.CommentDTO;
+import com.dto.MemberDTO;
 import com.dto.PageDTO;
 import com.dto.ShopDTO;
 import com.dto.ShopImgDTO;
@@ -39,7 +42,7 @@ public class ReviewController {
 	
 	//후기 게시판 메인
 	@RequestMapping(value = "/reviewBoard", method = RequestMethod.GET)
-	public ModelAndView reviewBoard(@RequestParam HashMap<String, String> map) {
+	public ModelAndView reviewBoard(@RequestParam HashMap<String, String> map, HttpSession session) {
 		System.out.println("reviewBoard==== map : "+map);
 		//카테고리 데이터 출력
 		List<CategoryDTO> categoryList=shopService.category();
@@ -63,7 +66,17 @@ public class ReviewController {
 			System.out.println("가게"+(i+1)+"\t"+paging.getList().get(i));
 		};
 		
-		//회원이 스크랩한 가게 표시
+		//회원인 경우 스크랩한 가게 표시
+		MemberDTO login=(MemberDTO) session.getAttribute("login");
+		if (login!=null) {
+			String id=login.getId();
+			System.out.println(id+" 로그인 상태");
+			List<Integer> scrapList=service.scrapList(id);
+			for (Integer shopNo : scrapList) {
+				System.out.println(shopNo);
+			}
+			mav.addObject("scrapList", scrapList);
+		}
 		
 		mav.addObject("paging", paging);
 		mav.setViewName("reviewBoard");

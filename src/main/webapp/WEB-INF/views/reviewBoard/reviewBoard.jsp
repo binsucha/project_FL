@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page import="java.util.*" %>
+<%@ page import="com.dto.*" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"></c:set>
 
 <style>
@@ -77,13 +80,22 @@
     <!-- 가게 목록 -->
 	<div class="row">
 	<c:forEach items="${shopList}" var="list" varStatus="status">
-		<c:set value="${list.shop_name}" var="shop"></c:set>
+		<c:set value="${list.shop_name}" var="shop"/>
 		<%-- <c:if test="${list.shop_img_rank eq 1}"> --%>
 		<div class="item col-md-4">
 			<div class="card">
 			  <div class="card-body">
 			    <h4 class="card-title" style="margin-left: 5;">${fn:substring(shop,0,12)}<!-- 가게 이름 12자리까지만 출력 -->
-			    	&nbsp;<img class="scrap" src="${contextPath}/resources/image/heart.png" width="30px" height="30px"></h4>
+			    	&nbsp;
+					<c:choose>
+						<c:when test="${fn:contains(scrapList, list.shop_no)}">
+							<img class="scrap" id="scrap_${list.shop_no}" data-no="${list.shop_no}" src="${contextPath}/resources/image/fullHeart.png" width="30px" height="30px">
+						</c:when>
+						<c:otherwise>
+							<img class="scrap" id="scrap_${list.shop_no}" data-no="${list.shop_no}" src="${contextPath}/resources/image/heart.png" width="30px" height="30px">
+						</c:otherwise>
+					</c:choose>
+			    </h4>
 			    <h6 class="card-subtitle mb-2 text-muted" style="margin-left: 5;">${list.category_name} / ${list.category2_name}</h6>
 			    <%-- <p class="card-text">${list.shop_info}</p> --%>
 			    	<img src="${contextPath}/resources/image/left.png" name="prev" width="20px" height="20px">
@@ -259,5 +271,42 @@
 				}
 			});//end ajax
 		});//end prev img
+		
+		//가게 스크랩
+		$(".scrap").click(function() {
+			var shopNo=$(this).attr("data-no");
+			console.log(shopNo);
+			if ("${login.id}"=="") {
+				showMesg("로그인 후 이용하세요.");
+			} else {
+				var id="${login.id}";
+				console.log(id);
+				$.ajax({
+					type : "get",
+					url : "scrap",
+					dataType : "text",
+					data : {
+						id : id,
+						shopNo : shopNo
+					},
+					success : function(data, status, xhr) {
+						console.log("success", data);
+						if (data==1) {
+							$("#scrap_"+shopNo).attr("src","${contextPath}/resources/image/fullHeart.png");
+						} else {
+							$("#scrap_"+shopNo).attr("src","${contextPath}/resources/image/heart.png");
+						}
+					},
+					error : function(xhr, status, error) {
+						console.log(error);
+					}
+				});//end ajax
+			}
+		});//end scrap
 	});//end ready
+	
+	function showMesg(mesg) {
+		$("#modalBtn").trigger("click");
+		$("#modalMesg").text(mesg);
+	}
 </script>

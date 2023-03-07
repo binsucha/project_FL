@@ -6,14 +6,19 @@
 	<!-- 전체 가게 목록 -->
 	<select id="selectAllShop" resultType="ShopDTO" parameterType="hashMap">
 		select s.shop_no, shop_name, s.category_no, s.category2_no, shop_location,
-			shop_contact, shop_info, average_rate, shop_created, shop_hits,
+			shop_contact, shop_info, nvl(round(avg(r.rate),1),0) average_rate, shop_created, shop_hits,
 			shop_img_rank, shop_img_route,
 			c.category_name, c.category_rank,
 			c2.category2_name, c2.category2_rank
 		from shop s
-		join shop_img i on s.shop_no = i.shop_no
-		join category c on s.category_no = c.category_no
-		join category2 c2 on s.category2_no = c2.category2_no
+		join shop_img i
+			on s.shop_no = i.shop_no
+		join category c
+			on s.category_no = c.category_no
+		join category2 c2
+			on s.category2_no = c2.category2_no
+		left outer join review r
+			on s.shop_no = r.shop_no
 		<where>
 			shop_img_rank = 1<!-- 가게 이미지 1개만 출력 -->
 			<if test="categoryNo != null and !categoryNo.equals('')">
@@ -23,6 +28,11 @@
 				and	${searchName} like '%${searchValue}%'
 			</if>
 		</where>
+		group by s.shop_no, shop_name, s.category_no, s.category2_no, shop_location,
+			shop_contact, shop_info, shop_created, shop_hits,
+			shop_img_rank, shop_img_route,
+			c.category_name, c.category_rank,
+			c2.category2_name, c2.category2_rank
 		order by
 		<if test="sortBy != null and !sortBy.equals('')">
 			${sortBy} desc,
@@ -133,4 +143,11 @@
 		delete from review_img
 		where review_no = #{reviewNo}
 	</delete>
+	
+	<!-- 스크랩 목록 -->
+	<select id="scrapList" resultType="int">
+		select shop_no
+		from scrap
+		where id = #{id}
+	</select>
 </mapper>

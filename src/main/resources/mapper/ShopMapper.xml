@@ -96,4 +96,24 @@
 		delete from shop
 		where shop_no = #{shopNo}
 	</delete>
+	
+	<!-- 스크랩 확인 -->
+	<select id="checkScrap" parameterType="hashMap" resultType="int">
+		select count(*) from scrap
+		where id = #{id}
+		and shop_no = #{shopNo}
+	</select>
+	
+	<!-- 스크랩 추가 -->
+	<insert id="addScrap" parameterType="hashMap">
+		insert into scrap (id, shop_no, scrap_created)
+		values (#{id}, #{shopNo}, sysdate)
+	</insert>
+	
+	<!-- 스크랩 취소 -->
+	<delete id="deleteScrap" parameterType="hashMap">
+		delete from scrap
+		where id = #{id}
+		and shop_no = #{shopNo}
+	</delete>
 </mapper>

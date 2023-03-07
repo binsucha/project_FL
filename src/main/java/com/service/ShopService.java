@@ -75,4 +75,19 @@ public class ShopService {
 		dao.deleteShopImg(shopNo);
 	}
 
+	//스크랩 확인
+	public int checkScrap(Map<String, String> map) {
+		return dao.checkScrap(map);
+	}
+
+	//스크랩 추가
+	public void addScrap(Map<String, String> map) {
+		dao.addScrap(map);
+	}
+
+	//스크랩 취소
+	public void deleteScrap(Map<String, String> map) {
+		dao.deleteScrap(map);
+	}
+
 }

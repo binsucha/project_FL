@@ -75,5 +75,22 @@ public class ShopDAO {
 		int num=session.delete("ShopMapper.deleteShopImg", shopNo);
 		System.out.println(num+"개 가게 이미지 삭제 완료");
 	}
+
+	//스크랩 확인
+	public int checkScrap(Map<String, String> map) {
+		return session.selectOne("ShopMapper.checkScrap", map);
+	}
+
+	//스크랩 추가
+	public void addScrap(Map<String, String> map) {
+		int num=session.insert("ShopMapper.addScrap", map);
+		System.out.println(num+"개 스크랩 추가");
+	}
+
+	//스크랩 취소
+	public void deleteScrap(Map<String, String> map) {
+		int num=session.delete("ShopMapper.deleteScrap", map);
+		System.out.println(num+"개 스크랩 취소");
+	}
 	
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.dto.CommentDTO;
 import com.dto.PageDTO;
 import com.dto.ReviewDTO;
+import com.dto.ScrapDTO;
 import com.dto.ShopDTO;
 
 @Repository
@@ -105,5 +106,10 @@ public class ReviewDAO {
 	public void deleteReviewImg(int reviewNo) {
 		int num=session.delete("ReviewMapper.deleteReviewImg", reviewNo);
 		System.out.println(num+"개 후기 이미지 삭제 완료");
+	}
+
+	//스크랩 목록
+	public List<Integer> scrapList(String id) {
+		return session.selectList("ReviewMapper.scrapList", id);
 	}
 }

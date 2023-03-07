@@ -372,4 +372,25 @@ public class ShopController {
 		//가게 삭제
 		service.deleteShop(shopNo);
 	}
+	
+	//가게 스크랩
+	@RequestMapping(value = "/scrap", method = RequestMethod.GET)
+	@ResponseBody
+	public int scrap(@RequestParam Map<String, String> map) {
+		System.out.println("scrap===="+map);
+		
+		int num=service.checkScrap(map);
+		System.out.println("스크랩 확인 : "+num);
+		if (num==1) {
+			System.out.println("스크랩 상태입니다.");
+			service.deleteScrap(map);
+			num=0;
+		} else {
+			System.out.println("스크랩 상태가 아닙니다.");
+			service.addScrap(map);
+			num=1;
+		}
+		System.out.println("최종 스크랩 상태 : "+num);
+		return num;
+	}
 }

@@ -62,6 +62,7 @@ public class MypageController {
 		//System.out.println(id+"님의 회원 정보 수정"+map);
 		
 		MemberDTO member=(MemberDTO)session.getAttribute("login");
+		System.out.println("회원 정보 : "+member);
 		HashMap<String, String> accountMap=new HashMap<String, String>();
 		accountMap.put("id", id);
 		int num=0;
@@ -95,13 +96,14 @@ public class MypageController {
 		if (num>0) {
 			mesg="회원 정보가 수정되었습니다.";
 			MemberDTO updateMember=service.selectMember(accountMap);
-			m.addFlashAttribute("login", updateMember);
+			System.out.println("업데이트 회원 정보 : "+updateMember);
+			session.setAttribute("login", updateMember);
 		} else {
 			mesg="변경된 회원 정보가 없습니다.";
 		}
 		m.addFlashAttribute("mesg", mesg);
 		
-		return "redirect:/";//메인으로
+		return "redirect:/mypage/"+id;//마이페이지 메인으로
 	}
 	
 	//회원 탈퇴
