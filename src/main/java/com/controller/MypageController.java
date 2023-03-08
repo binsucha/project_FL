@@ -1,12 +1,15 @@
 package com.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,17 +18,42 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dto.MemberDTO;
+import com.dto.ReviewDTO;
+import com.dto.ShopDTO;
 import com.service.MemberService;
+import com.service.ShopService;
 
 @Controller
 public class MypageController {
 	@Autowired
 	private MemberService service;
+	@Autowired
+	private ShopService shopService;
 	
 	//마이페이지 메인
 	@RequestMapping(value = "/mypage/{id}", method = RequestMethod.GET)
-	public String mypage(@PathVariable("id") String id) {
+	public String mypage(@PathVariable("id") String id, Model model) {
 		//System.out.println("mypage====");
+		
+		//회원이 작성한 후기 목록
+		List<ReviewDTO> reviewList=service.selectMemberReview(id);
+		for (ReviewDTO reviewDTO : reviewList) {
+			System.out.println(reviewDTO);
+		}
+		//회원이 스크랩한 가게 목록
+		List<Integer> list=service.selectMemberShop(id);
+		List<ShopDTO> scrapList=new ArrayList<ShopDTO>();
+		for (Integer shopNo : list) {
+			System.out.println(shopNo);
+			ShopDTO shop=shopService.selectShop(shopNo);
+			scrapList.add(shop);
+		}
+		for (ShopDTO shopDTO : scrapList) {
+			System.out.println(shopDTO);
+		}
+		
+		model.addAttribute("reviewList", reviewList);
+		model.addAttribute("scrapList", scrapList);
 		return "mypage";
 	}
 	
@@ -120,4 +148,17 @@ public class MypageController {
 		return "redirect:/";
 	}
 	
+	//회원 전체 후기
+	@RequestMapping(value = "/mypage/{id}/review", method = RequestMethod.GET)
+	@ResponseBody//////////
+	public void selectMemberReview(@PathVariable("id") String id) {
+		System.out.println(id+"====selectMemberReview");
+	}
+	
+	//회원 전체 스크랩
+	@RequestMapping(value = "/mypage/{id}/scrap", method = RequestMethod.GET)
+	@ResponseBody//////////
+	public void selectMemberShop(@PathVariable("id") String id) {
+		System.out.println(id+"====selectMemberShop");
+	}
 }

@@ -79,4 +79,24 @@
 		delete from member
 		where id = #{id}
 	</delete>
+	
+	<!-- 회원 작성 후기 목록 -->
+	<select id="selectMemberReview" resultType="ReviewDTO">
+		select r.review_no, id, r.shop_no, rate, review_content, review_created, review_img_route, shop_name
+		from review r
+		LEFT OUTER JOIN review_img i
+			ON r.review_no = i.review_no
+		join shop s
+			on r.shop_no = s.shop_no
+		where id = #{id}
+		order by review_created desc
+	</select>
+	
+	<!-- 회원 스크랩 가게 목록 -->
+	<select id="selectMemberShop" resultType="int">
+		select shop_no
+		from scrap
+		where id = #{id}
+		order by scrap_created desc
+	</select>
 </mapper>

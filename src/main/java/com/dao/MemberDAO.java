@@ -1,6 +1,7 @@
 package com.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.dto.MemberDTO;
+import com.dto.ReviewDTO;
+import com.dto.ShopDTO;
 
 @Repository
 public class MemberDAO {
@@ -57,6 +60,16 @@ public class MemberDAO {
 	//회원 탈퇴
 	public int deleteMember(String id) {
 		return session.delete("MemberMapper.deleteMember", id);
+	}
+
+	//회원이 작성한 후기 목록
+	public List<ReviewDTO> selectMemberReview(String id) {
+		return session.selectList("MemberMapper.selectMemberReview", id);
+	}
+
+	//회원이 스크랩한 가게 목록
+	public List<Integer> selectMemberShop(String id) {
+		return session.selectList("MemberMapper.selectMemberShop", id);
 	}
 
 }

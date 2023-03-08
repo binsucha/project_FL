@@ -1,6 +1,7 @@
 package com.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.dao.MemberDAO;
 import com.dto.MemberDTO;
+import com.dto.ReviewDTO;
+import com.dto.ShopDTO;
 
 @Service
 public class MemberService {
@@ -57,6 +60,16 @@ public class MemberService {
 	//회원 탈퇴
 	public int deleteMember(String id) {
 		return dao.deleteMember(id);
+	}
+
+	//회원이 작성한 후기 목록
+	public List<ReviewDTO> selectMemberReview(String id) {
+		return dao.selectMemberReview(id);
+	}
+
+	//회원이 스크랩한 가게 목록
+	public List<Integer> selectMemberShop(String id) {
+		return dao.selectMemberShop(id);
 	}
 
 }

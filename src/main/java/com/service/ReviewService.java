@@ -11,7 +11,6 @@ import com.dao.ReviewDAO;
 import com.dto.CommentDTO;
 import com.dto.PageDTO;
 import com.dto.ReviewDTO;
-import com.dto.ScrapDTO;
 import com.dto.ShopDTO;
 
 @Service

@@ -24,7 +24,7 @@ public class ShopDTO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public ShopDTO(int shop_no, String shop_name, int category_no, int category2_no, String shop_location,
 			String shop_contact, String shop_info, double average_rate, String shop_created, int shop_hits,
 			String shop_img_rank, String shop_img_route, String category_name, String category_rank,
@@ -47,7 +47,7 @@ public class ShopDTO {
 		this.category2_name = category2_name;
 		this.category2_rank = category2_rank;
 	}
-	
+
 	public int getShop_no() {
 		return shop_no;
 	}
@@ -175,7 +175,7 @@ public class ShopDTO {
 	public void setCategory2_rank(String category2_rank) {
 		this.category2_rank = category2_rank;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "ShopDTO [shop_no=" + shop_no + ", shop_name=" + shop_name + ", category_no=" + category_no

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import com.dto.CommentDTO;
 import com.dto.PageDTO;
 import com.dto.ReviewDTO;
-import com.dto.ScrapDTO;
 import com.dto.ShopDTO;
 
 @Repository

@@ -1,14 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page import="java.util.*" %>
-<%@ page import="com.dto.*" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"></c:set>
 
 <style>
 	.container {
 		float: left;
+		cursor: default;
 	}
 	img {
 		border-radius: 1.5em;
@@ -21,6 +19,7 @@
 	}
 	.card {
 		border-radius: 2em;
+		text-align: center;
 	}
 	.item {
 		margin-bottom: 15;
@@ -28,9 +27,6 @@
 	}
 	#paging {
 		justify-content: center;
-	}
-	.card-title {
-		cursor: default;
 	}
 	.page-item {
 		cursor: pointer;
@@ -85,8 +81,7 @@
 		<div class="item col-md-4">
 			<div class="card">
 			  <div class="card-body">
-			    <h4 class="card-title" style="margin-left: 5;">${fn:substring(shop,0,12)}<!-- 가게 이름 12자리까지만 출력 -->
-			    	&nbsp;
+			    <h4 class="card-title" style="margin-left: 5; text-align: left;">${fn:substring(shop,0,12)}<!-- 가게 이름 12자리까지만 출력 -->
 					<c:choose>
 						<c:when test="${fn:contains(scrapList, list.shop_no)}">
 							<img class="scrap" id="scrap_${list.shop_no}" data-no="${list.shop_no}" src="${contextPath}/resources/image/fullHeart.png" width="30px" height="30px">
@@ -96,14 +91,14 @@
 						</c:otherwise>
 					</c:choose>
 			    </h4>
-			    <h6 class="card-subtitle mb-2 text-muted" style="margin-left: 5;">${list.category_name} / ${list.category2_name}</h6>
+			    <h6 class="card-subtitle mb-2 text-muted" style="margin-left: 5; text-align: left;">${list.category_name} / ${list.category2_name}</h6>
 			    <%-- <p class="card-text">${list.shop_info}</p> --%>
-			    	<img src="${contextPath}/resources/image/left.png" name="prev" width="20px" height="20px">
-			    	<a href="${contextPath}/shop/${list.shop_no}" class="card-link" style="text-decoration: none;">
-			    		<img src="${contextPath}/resources/shop/${list.shop_img_route}" style="margin: 20 10 10 10"
-			    			id="img_${list.shop_no}" data-no="${list.shop_no}" data-rank="${list.shop_img_rank}" width="250px" height="250px">
-			    	</a>
-			    	<img src="${contextPath}/resources/image/right.png" name="next" width="20px" height="20px">
+			    <img src="${contextPath}/resources/image/left.png" name="prev" width="7%">
+			    <a href="${contextPath}/shop/${list.shop_no}" class="card-link" style="text-decoration: none;">
+			    	<img src="${contextPath}/resources/shop/${list.shop_img_route}" style="margin: 20 10 10 10"
+			    		id="img_${list.shop_no}" data-no="${list.shop_no}" data-rank="${list.shop_img_rank}" width="250px">
+			    </a>
+			    <img src="${contextPath}/resources/image/right.png" name="next" width="7%">
 			  </div>
 			</div>
 		</div>

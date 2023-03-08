@@ -10,6 +10,8 @@ public class ReviewDTO {
 	
 	private String review_img_route;
 	private String member_name;
+	
+	private String shop_name;
 
 	public ReviewDTO() {
 		super();
@@ -17,7 +19,7 @@ public class ReviewDTO {
 	}
 
 	public ReviewDTO(int review_no, String id, int shop_no, double rate, String review_content, String review_created,
-			String review_img_route, String member_name) {
+			String review_img_route, String member_name, String shop_name) {
 		super();
 		this.review_no = review_no;
 		this.id = id;
@@ -27,6 +29,7 @@ public class ReviewDTO {
 		this.review_created = review_created;
 		this.review_img_route = review_img_route;
 		this.member_name = member_name;
+		this.shop_name = shop_name;
 	}
 
 	public int getReview_no() {
@@ -93,11 +96,19 @@ public class ReviewDTO {
 		this.member_name = member_name;
 	}
 
+	public String getShop_name() {
+		return shop_name;
+	}
+
+	public void setShop_name(String shop_name) {
+		this.shop_name = shop_name;
+	}
+
 	@Override
 	public String toString() {
 		return "ReviewDTO [review_no=" + review_no + ", id=" + id + ", shop_no=" + shop_no + ", rate=" + rate
 				+ ", review_content=" + review_content + ", review_created=" + review_created + ", review_img_route="
-				+ review_img_route + ", member_name=" + member_name + "]";
+				+ review_img_route + ", member_name=" + member_name + ", shop_name=" + shop_name + "]";
 	}
 
 }
